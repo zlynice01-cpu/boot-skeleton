@@ -22,6 +22,7 @@ public class AuthFailureHandler implements AuthenticationFailureHandler
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException
     {
+        log.info("[AuthFailureHandler.onAuthenticationFailure]:登录认证失败");
         ResponseUtils.writeJson(response, Result.error(exception.getMessage()));
     }
 }

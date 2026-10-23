@@ -22,6 +22,7 @@ public class AuthSuccessHandler implements AuthenticationSuccessHandler
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException
     {
+        log.info("[AuthSuccessHandler.onAuthenticationSuccess]:登录认证成功");
         ResponseUtils.writeJson(response, Result.success());
     }
 
