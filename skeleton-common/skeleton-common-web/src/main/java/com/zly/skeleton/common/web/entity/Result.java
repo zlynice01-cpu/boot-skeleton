@@ -1,6 +1,6 @@
 package com.zly.skeleton.common.web.entity;
 
-import com.zly.skeleton.common.web.enums.BaseEnum;
+import com.zly.skeleton.common.web.enums.BaseErrorEnum;
 import com.zly.skeleton.common.web.enums.BaseError;
 import lombok.Data;
 
@@ -54,7 +54,7 @@ public class Result<T> implements Serializable {
      * @return json格式数据
      */
     public static <T> Result<T> success() {
-        return new Result<>(BaseEnum.SUCCESS.getCode(), true, BaseEnum.SUCCESS.getMsg());
+        return new Result<>(BaseErrorEnum.SUCCESS.getCode(), true, BaseErrorEnum.SUCCESS.getMsg());
     }
 
 
@@ -65,7 +65,7 @@ public class Result<T> implements Serializable {
      * @return json格式数据
      */
     public static <T> Result<T> success(T data) {
-        return new Result<>(BaseEnum.SUCCESS.getCode(), true, data, BaseEnum.SUCCESS.getMsg());
+        return new Result<>(BaseErrorEnum.SUCCESS.getCode(), true, data, BaseErrorEnum.SUCCESS.getMsg());
     }
 
 
@@ -77,7 +77,7 @@ public class Result<T> implements Serializable {
      * @return json格式数据
      */
     public static <T> Result<T> success(T data, String msg) {
-        return new Result<>(BaseEnum.SUCCESS.getCode(), true, data, msg);
+        return new Result<>(BaseErrorEnum.SUCCESS.getCode(), true, data, msg);
     }
 
     /**
@@ -97,7 +97,7 @@ public class Result<T> implements Serializable {
      * @return json格式数据
      */
     public static <T> Result<T> error() {
-        return new Result<>(BaseEnum.FAIL.getCode(), false, BaseEnum.FAIL.getMsg());
+        return new Result<>(BaseErrorEnum.FAIL.getCode(), false, BaseErrorEnum.FAIL.getMsg());
     }
 
 
@@ -107,7 +107,7 @@ public class Result<T> implements Serializable {
      * @return json格式数据
      */
     public static <T> Result<T> error(String msg) {
-        return new Result<>(BaseEnum.FAIL.getCode(), false, msg);
+        return new Result<>(BaseErrorEnum.FAIL.getCode(), false, msg);
     }
 
 
@@ -130,35 +130,35 @@ public class Result<T> implements Serializable {
     }
 
     public static <T> Result<T> badArgument() {
-        return error(BaseEnum.BAD_ARGUMENT);
+        return error(BaseErrorEnum.BAD_ARGUMENT);
     }
 
     public static <T> Result<T> badArgumentValue() {
-        return error(BaseEnum.BAD_ARGUMENT_VALUE);
+        return error(BaseErrorEnum.BAD_ARGUMENT_VALUE);
     }
 
     public static <T> Result<T> unlogin() {
-        return error(BaseEnum.UNLOGIN);
+        return error(BaseErrorEnum.UNLOGIN);
     }
 
     public static <T> Result<T> serious() {
-        return error(BaseEnum.SERIOUS);
+        return error(BaseErrorEnum.SERIOUS);
     }
 
     public static <T> Result<T> unsupport() {
-        return error(BaseEnum.UNSUPPORT);
+        return error(BaseErrorEnum.UNSUPPORT);
     }
 
     public static <T> Result<T> updatedDateExpired() {
-        return error(BaseEnum.UPDATED_DATE_EXPIRED);
+        return error(BaseErrorEnum.UPDATED_DATE_EXPIRED);
     }
 
     public static <T> Result<T> updatedDataFailed() {
-        return error(BaseEnum.UPDATED_DATA_FAILED);
+        return error(BaseErrorEnum.UPDATED_DATA_FAILED);
     }
 
     public static <T> Result<T> unauthz() {
-        return error(BaseEnum.UNAUTHZ);
+        return error(BaseErrorEnum.UNAUTHZ);
     }
 
 }

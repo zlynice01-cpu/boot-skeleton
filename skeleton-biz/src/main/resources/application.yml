@@ -1,5 +1,14 @@
 server:
   port: 8080
+  servlet:
+    session:
+      # 会话 30 分钟无操作失效
+      timeout: 30m
+      cookie:
+        name: JSESSIONID
+        http-only: true
+        # 前后端不同端口时携带 Cookie（Cross-Origin 需要 SameSite=None + secure）
+        same-site: lax
 
 spring:
   # mysql连接

@@ -3,7 +3,7 @@ package com.zly.skeleton.common.web.enums;
 /**
  * 基础状态码类
  */
-public enum BaseEnum implements BaseError
+public enum BaseErrorEnum implements BaseError
 {
 
     // 后台处理成功
@@ -131,7 +131,7 @@ public enum BaseEnum implements BaseError
 
     private final String msg;
 
-    BaseEnum(String msg, Integer code) {
+    BaseErrorEnum(String msg, Integer code) {
         this.code = code;
         this.msg = msg;
     }

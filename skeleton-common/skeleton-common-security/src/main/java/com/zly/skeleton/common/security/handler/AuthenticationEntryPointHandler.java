@@ -1,7 +1,7 @@
 package com.zly.skeleton.common.security.handler;
 
 import com.zly.skeleton.common.web.entity.Result;
-import com.zly.skeleton.common.web.enums.BaseEnum;
+import com.zly.skeleton.common.web.enums.BaseErrorEnum;
 import com.zly.skeleton.common.web.util.ResponseUtils;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,6 +24,6 @@ public class AuthenticationEntryPointHandler implements AuthenticationEntryPoint
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException
     {
         log.info("[AuthenticationEntryPointHandler.commence]:登录状态校验失败");
-        ResponseUtils.writeJson(response, Result.error(BaseEnum.UNLOGIN));
+        ResponseUtils.writeJson(response, Result.error(BaseErrorEnum.UNLOGIN));
     }
 }

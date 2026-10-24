@@ -7,6 +7,8 @@ import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -61,12 +63,10 @@ public class ResponseUtils
      */
     public static void writeImage(HttpServletResponse response, byte[] image)
     {
-        // 1. 设置响应头和状态码
         response.setStatus(HttpConstants.STATUS_CODE_OK);
         response.setCharacterEncoding(HttpConstants.CHARSET_UTF8);
         response.setContentType(HttpConstants.CONTENT_TYPE_JSON_UTF8);
 
-        // 2. 序列化对象并写出
         response.setContentType(HttpConstants.CONTENT_TYPE_IMG_JPEG);
         response.setContentLength(image.length);
         try (ServletOutputStream out = response.getOutputStream())
@@ -76,9 +76,37 @@ public class ResponseUtils
         } catch (IOException e)
         {
             log.error("写入HTTP响应失败, image: {}", image, e);
-            // 在 Filter 中如果连响应都写不出去，通常只能抛出运行时异常中断请求
             throw new RuntimeException("写入HTTP响应失败");
         }
     }
+
+    /**
+     * 直接向客户端输出图片响应
+     *
+     * @param response 响应对象
+     * @param image    图片对象
+     */
+    public static void writeImage(HttpServletResponse response, BufferedImage image)
+    {
+        response.setStatus(HttpConstants.STATUS_CODE_OK);
+        response.setCharacterEncoding(HttpConstants.CHARSET_UTF8);
+
+        response.setContentType(HttpConstants.CONTENT_TYPE_IMG_JPEG);
+
+        try (ServletOutputStream out = response.getOutputStream())
+        {
+            boolean success = ImageIO.write(image, "jpeg", out);
+            if (!success)
+            {
+                throw new RuntimeException("不支持的图片格式，写出失败");
+            }
+            out.flush();
+        } catch (IOException e)
+        {
+            log.error("写入HTTP响应失败", e);
+            throw new RuntimeException("写入HTTP响应失败");
+        }
+    }
+
 
 }

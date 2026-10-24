@@ -97,6 +97,11 @@
                 <artifactId>skeleton-common-web</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.zly.skeleton</groupId>
+                <artifactId>skeleton-common-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
