@@ -1,7 +1,7 @@
-package com.zly.skeleton.biz.service.impl;
+package com.zly.skeleton.common.security.service.impl;
 
-import com.zly.skeleton.biz.domain.entity.SysUser;
-import com.zly.skeleton.biz.service.SysUserService;
+import com.zly.skeleton.common.security.domain.entity.SysUser;
+import com.zly.skeleton.common.security.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,10 +1,12 @@
 package com.zly.skeleton.common.security.config;
 
-import com.zly.skeleton.common.security.filter.LoginFilter;
 import com.zly.skeleton.common.security.handler.AuthFailureHandler;
 import com.zly.skeleton.common.security.handler.AuthSuccessHandler;
 import com.zly.skeleton.common.security.handler.AuthenticationEntryPointHandler;
 import com.zly.skeleton.common.security.handler.LogoutSuccessfulHandler;
+import com.zly.skeleton.common.security.provider.MyAuthenticationProvider;
+import com.zly.skeleton.common.security.service.impl.MyUserDetailsService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +20,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  *
@@ -28,8 +29,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Slf4j
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig
 {
+
+    private final MyUserDetailsService userDetailsService;
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new MyBCryptPasswordEncoder();
@@ -42,20 +47,27 @@ public class SecurityConfig
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, LoginFilter loginFilter) throws Exception {
+    MyAuthenticationProvider myAuthenticationProvider() {
+        MyAuthenticationProvider provider = new MyAuthenticationProvider();
+        provider.setUserDetailsService(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 // 有状态会话：Security 上下文会写入 HttpSession，下一个请求自动还原
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/test/login/**", "/demo/login", "/error").permitAll()
+                        .requestMatchers("/doLogin", "/error", "/captcha/create").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .loginProcessingUrl("/login")
+                .formLogin(formLogin -> formLogin
+                        .loginProcessingUrl("/doLogin")
                         .successHandler(new AuthSuccessHandler())
-                        .failureHandler(new AuthFailureHandler())
-                )
+                        .failureHandler(new AuthFailureHandler()))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler(new LogoutSuccessfulHandler())
@@ -64,8 +76,7 @@ public class SecurityConfig
                         .deleteCookies("JSESSIONID"))
                 .exceptionHandling(customizer -> customizer
                         .authenticationEntryPoint(new AuthenticationEntryPointHandler()))
-                // 自定义登录过滤器接管 /demo/login（支持 JSON 与表单两种入参）
-                .addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
+                .rememberMe(r -> r.key("remember"));
         return http.build();
     }
 
@@ -76,15 +87,15 @@ public class SecurityConfig
                 .build();
     }
 
-    @Bean
+    /*@Bean
     public LoginFilter loginFilter(AuthenticationManager authenticationManager) {
         LoginFilter loginFilter = new LoginFilter();
         loginFilter.setAuthenticationSuccessHandler(new AuthSuccessHandler());
         loginFilter.setAuthenticationFailureHandler(new AuthFailureHandler());
         loginFilter.setAuthenticationManager(authenticationManager);
-        loginFilter.setFilterProcessesUrl("/demo/login");
+        loginFilter.setFilterProcessesUrl("/doLogin");
         return loginFilter;
-    }
+    }*/
 
 
 }

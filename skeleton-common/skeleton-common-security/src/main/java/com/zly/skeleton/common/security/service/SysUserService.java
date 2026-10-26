@@ -1,7 +1,7 @@
-package com.zly.skeleton.biz.service;
+package com.zly.skeleton.common.security.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zly.skeleton.biz.domain.entity.SysUser;
+import com.zly.skeleton.common.security.domain.entity.SysUser;
 
 /**
  *

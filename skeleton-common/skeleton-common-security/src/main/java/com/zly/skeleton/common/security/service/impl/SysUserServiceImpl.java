@@ -1,11 +1,11 @@
-package com.zly.skeleton.biz.service.impl;
+package com.zly.skeleton.common.security.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zly.skeleton.biz.domain.entity.SysUser;
-import com.zly.skeleton.biz.mapper.SysUserMapper;
-import com.zly.skeleton.biz.service.SysUserService;
+import com.zly.skeleton.common.security.domain.entity.SysUser;
+import com.zly.skeleton.common.security.mapper.SysUserMapper;
+import com.zly.skeleton.common.security.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

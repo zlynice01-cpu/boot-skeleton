@@ -1,7 +1,7 @@
-package com.zly.skeleton.biz.mapper;
+package com.zly.skeleton.common.security.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.zly.skeleton.biz.domain.entity.SysUser;
+import com.zly.skeleton.common.security.domain.entity.SysUser;
 
 /**
  *

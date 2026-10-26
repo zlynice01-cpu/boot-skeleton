@@ -11,7 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
  * @author ZLY
  * @since 2026/10/20 11:24
  */
-@MapperScan(basePackages = "com.zly.skeleton.biz.mapper")
+@MapperScan(basePackages = {"com.zly.skeleton.biz.mapper", "com.zly.skeleton.common.security.mapper"})
 @ComponentScan(basePackages = "com.zly.skeleton.**")
 @SpringBootApplication
 public class ApplicationStarter

@@ -27,6 +27,12 @@
             <groupId>com.zly.skeleton</groupId>
             <artifactId>skeleton-common-web</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.zly.skeleton</groupId>
+            <artifactId>skeleton-common-mybatisplus</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
 </project>

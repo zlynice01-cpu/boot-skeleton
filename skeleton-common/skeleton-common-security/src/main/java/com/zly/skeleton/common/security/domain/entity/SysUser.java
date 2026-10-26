@@ -1,4 +1,4 @@
-package com.zly.skeleton.biz.domain.entity;
+package com.zly.skeleton.common.security.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
