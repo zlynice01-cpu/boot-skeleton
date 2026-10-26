@@ -31,6 +31,12 @@
         <dependency>
             <groupId>com.zly.skeleton</groupId>
             <artifactId>skeleton-common-mybatisplus</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.zly.skeleton</groupId>
+                    <artifactId>skeleton-common-security</artifactId>
+                </exclusion>
+            </exclusions>
             <optional>true</optional>
         </dependency>
     </dependencies>

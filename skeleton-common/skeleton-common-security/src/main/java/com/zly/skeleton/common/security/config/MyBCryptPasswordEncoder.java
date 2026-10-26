@@ -1,5 +1,7 @@
 package com.zly.skeleton.common.security.config;
 
+import cn.hutool.crypto.digest.BCrypt;
+import cn.hutool.crypto.digest.DigestUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.util.StringUtils;
 
@@ -10,10 +12,15 @@ import org.springframework.util.StringUtils;
  */
 public class MyBCryptPasswordEncoder implements PasswordEncoder
 {
+
+    private static final String SALT = "ENCODER";
+
     @Override
     public String encode(CharSequence rawPassword)
     {
-        return rawPassword + "{decrypt}";
+        rawPassword = rawPassword + SALT;
+        String hash = DigestUtil.md5Hex(rawPassword.toString());
+        return DigestUtil.md5Hex(hash);
     }
 
     @Override

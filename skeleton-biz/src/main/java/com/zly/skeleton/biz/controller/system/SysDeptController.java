@@ -1,4 +1,4 @@
-package com.zly.skeleton.biz.controller.userinfo;
+package com.zly.skeleton.biz.controller.system;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -6,12 +6,10 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  *
  * @author ZLY
- * @since 2026/10/26 9:35
+ * @since 2026/10/26 14:08
  */
 @RestController
-@RequestMapping("/user")
-public class UserController
+@RequestMapping("/captcha")
+public class SysDeptController
 {
-
-
 }

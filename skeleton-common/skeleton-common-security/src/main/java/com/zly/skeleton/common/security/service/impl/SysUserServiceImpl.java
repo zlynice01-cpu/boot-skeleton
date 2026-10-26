@@ -3,10 +3,13 @@ package com.zly.skeleton.common.security.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zly.skeleton.common.security.domain.entity.SysUser;
+import com.zly.skeleton.mybatisplus.entity.SysUser;
+import com.zly.skeleton.common.security.entity.user.dto.SeCreateUserDTO;
 import com.zly.skeleton.common.security.mapper.SysUserMapper;
 import com.zly.skeleton.common.security.service.SysUserService;
+import com.zly.skeleton.common.web.entity.Result;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,5 +37,15 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             return null;
         }
         return sysUserList.getFirst();
+    }
+
+    @Override
+    public Result<Void> create(SeCreateUserDTO dto)
+    {
+        dto.initAndCheck();
+        SysUser sysUser = new SysUser();
+        BeanUtils.copyProperties(dto, sysUser);
+        save(sysUser);
+        return Result.success();
     }
 }

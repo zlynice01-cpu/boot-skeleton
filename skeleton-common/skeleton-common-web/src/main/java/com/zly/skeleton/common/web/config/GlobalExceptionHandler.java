@@ -2,6 +2,7 @@ package com.zly.skeleton.common.web.config;
 
 import com.zly.skeleton.common.web.entity.Result;
 import com.zly.skeleton.common.web.enums.BaseErrorEnum;
+import com.zly.skeleton.common.web.exception.BizException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.ValidationException;
@@ -27,6 +28,13 @@ import java.util.stream.Collectors;
 @Order
 public class GlobalExceptionHandler
 {
+
+    @ExceptionHandler(BizException.class)
+    public Result<?> exceptionHandler(BizException bizException)
+    {
+        log.error("bizException occurred.", bizException);
+        return Result.error(bizException.getErrorCode());
+    }
 
     /**
      * JSON @RequestBody @Valid 校验异常（你当前报错就是这个）

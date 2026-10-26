@@ -1,13 +1,16 @@
 package com.zly.skeleton.common.security.service.impl;
 
-import com.zly.skeleton.common.security.domain.entity.SysUser;
+import com.zly.skeleton.common.security.entity.LoginUser;
+import com.zly.skeleton.mybatisplus.entity.SysUser;
 import com.zly.skeleton.common.security.service.SysUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  *
@@ -29,10 +32,6 @@ public class MyUserDetailsService implements UserDetailsService
         {
             throw new UsernameNotFoundException("用户名不存在");
         }
-        return User.withUsername(user.getUsername())
-                .password(user.getPassword())
-                .disabled(!Integer.valueOf(1).equals(user.getEnabled()))
-                .authorities("user")
-                .build();
+        return new LoginUser(user, List.of(new SimpleGrantedAuthority("user")));
     }
 }
