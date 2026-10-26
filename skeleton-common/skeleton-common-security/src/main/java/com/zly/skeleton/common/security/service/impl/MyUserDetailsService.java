@@ -1,8 +1,10 @@
 package com.zly.skeleton.common.security.service.impl;
 
 import com.zly.skeleton.common.security.entity.LoginUser;
+import com.zly.skeleton.common.security.service.SeUserDetailsService;
+import com.zly.skeleton.mybatisplus.entity.SysPermission;
+import com.zly.skeleton.mybatisplus.entity.SysRole;
 import com.zly.skeleton.mybatisplus.entity.SysUser;
-import com.zly.skeleton.common.security.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -22,7 +27,7 @@ import java.util.List;
 public class MyUserDetailsService implements UserDetailsService
 {
 
-    private final SysUserService userService;
+    private final SeUserDetailsService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
@@ -32,6 +37,18 @@ public class MyUserDetailsService implements UserDetailsService
         {
             throw new UsernameNotFoundException("用户名不存在");
         }
-        return new LoginUser(user, List.of(new SimpleGrantedAuthority("user")));
+        List<SysRole> roleList = userService.getRoleList(user.getId());
+        Set<Long> roleIdSet = roleList.stream().filter(Objects::nonNull)
+                .map(SysRole::getId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        List<SysPermission> permissions = userService.getPermissionsByRoleIds(roleIdSet);
+
+        Set<SimpleGrantedAuthority> authorityList = permissions.stream().filter(Objects::nonNull)
+                .map(item -> new SimpleGrantedAuthority(item.getPermissionKey()))
+                .collect(Collectors.toSet());
+
+        return new LoginUser(user, authorityList);
     }
 }

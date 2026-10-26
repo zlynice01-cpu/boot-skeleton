@@ -2,11 +2,10 @@ package com.zly.skeleton.biz.controller.system;
 
 import com.zly.skeleton.biz.domain.dept.dto.CheckDeptDTO;
 import com.zly.skeleton.biz.domain.user.dto.CreateUserDTO;
-import com.zly.skeleton.biz.service.SysDeptService;
+import com.zly.skeleton.biz.service.system.SysDeptService;
 import com.zly.skeleton.common.security.entity.user.dto.SeCreateUserDTO;
-import com.zly.skeleton.common.security.service.SysUserService;
+import com.zly.skeleton.biz.service.system.SysUserService;
 import com.zly.skeleton.common.web.entity.Result;
-import com.zly.skeleton.mybatisplus.entity.SysDept;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;

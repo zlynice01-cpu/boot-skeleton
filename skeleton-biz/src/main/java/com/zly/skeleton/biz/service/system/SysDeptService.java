@@ -1,4 +1,4 @@
-package com.zly.skeleton.biz.service;
+package com.zly.skeleton.biz.service.system;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zly.skeleton.biz.domain.dept.dto.CheckDeptDTO;

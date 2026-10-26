@@ -1,10 +1,10 @@
-package com.zly.skeleton.biz.service.impl;
+package com.zly.skeleton.biz.service.system.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zly.skeleton.biz.domain.dept.dto.CheckDeptDTO;
 import com.zly.skeleton.biz.enums.StatusEnum;
 import com.zly.skeleton.biz.mapper.SysDeptMapper;
-import com.zly.skeleton.biz.service.SysDeptService;
+import com.zly.skeleton.biz.service.system.SysDeptService;
 import com.zly.skeleton.common.web.enums.BizErrorEnum;
 import com.zly.skeleton.common.web.exception.BizException;
 import com.zly.skeleton.mybatisplus.entity.SysDept;
