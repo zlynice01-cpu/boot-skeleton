@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zly.skeleton.biz.mapper.SysUserMapper">
+
+    <select id="selectUserPage" resultType="com.zly.skeleton.biz.domain.user.vo.UserPageItemVO">
+        select u.id as id, d.id as deptId, u.username, u.nickname, u.email, u.phone, u.avatar, u.status
+        from sys_user as u
+        left join sys_dept as d on u.is_deleted = 'N' and d.is_deleted = 'N' and u.dept_id = d.id
+        <where>
+            <if test="dto.deptId != null">
+                and d.id = #{dto.deptId}
+            </if>
+            <if test="dto.nickname != null and dto.nickname != ''">
+                and u.nickname like concat(#{dto.nickname}, '%')
+            </if>
+        </where>
+    </select>
+
+</mapper>

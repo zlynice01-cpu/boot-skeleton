@@ -3,11 +3,8 @@ package com.zly.skeleton.common.util;
 import cn.hutool.core.util.RandomUtil;
 import lombok.Data;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Random;
 
 /**
@@ -16,7 +13,7 @@ import java.util.Random;
  * @since 2026/10/23 15:55
  */
 @Data
-public class VerifyCode
+public class VerifyCodeUtil
 {
 
     private final int width = 100;// 生成验证码图片的宽度

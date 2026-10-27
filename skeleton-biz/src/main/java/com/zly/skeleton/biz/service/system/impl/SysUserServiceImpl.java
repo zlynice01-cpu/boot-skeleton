@@ -1,18 +1,30 @@
 package com.zly.skeleton.biz.service.system.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zly.skeleton.biz.domain.user.dto.UserPageDTO;
+import com.zly.skeleton.biz.domain.user.dto.UserProfileDTO;
+import com.zly.skeleton.biz.domain.user.vo.UserPageItemVO;
+import com.zly.skeleton.biz.domain.user.vo.UserProfileVO;
+import com.zly.skeleton.biz.mapper.SysDeptMapper;
+import com.zly.skeleton.biz.mapper.SysPermissionMapper;
+import com.zly.skeleton.biz.mapper.SysRoleMapper;
 import com.zly.skeleton.biz.mapper.SysUserMapper;
 import com.zly.skeleton.biz.service.system.SysUserService;
 import com.zly.skeleton.common.security.entity.user.dto.SeCreateUserDTO;
 import com.zly.skeleton.common.web.entity.Result;
-import com.zly.skeleton.mybatisplus.entity.SysUser;
+import com.zly.skeleton.mybatisplus.entity.*;
+import com.zly.skeleton.mybatisplus.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -25,6 +37,9 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 {
 
     private final SysUserMapper userMapper;
+    private final SysRoleMapper roleMapper;
+    private final SysDeptMapper deptMapper;
+    private final SysPermissionMapper permissionMapper;
 
     @Override
     public SysUser getByUsername(String username)
@@ -47,5 +62,67 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         BeanUtils.copyProperties(dto, sysUser);
         save(sysUser);
         return Result.success();
+    }
+
+    @Override
+    public Result<UserProfileVO> getUserProfile(UserProfileDTO dto)
+    {
+        Long userId = dto.getUserId();
+        SysUser userEntity = getById(userId);
+        List<SysRole> roles = roleMapper.selectRoleListByUserId(userId);
+        List<SysPermission> permissions = new ArrayList<>();
+        if (ObjectUtils.isNotEmpty(roles))
+        {
+            Set<Long> roleIdSet = roles.stream().filter(Objects::nonNull)
+                    .map(SysRole::getId)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+            permissions = permissionMapper.selectPermissionsByRoleIds(roleIdSet);
+        }
+
+        UserProfileVO vo = UserProfileVO.createVO(userEntity, roles, permissions);
+
+        return Result.success(vo);
+    }
+
+    @Override
+    public Result<PageResponse<UserPageItemVO>> getPage(UserPageDTO dto)
+    {
+        IPage<UserPageItemVO> page = PageUtil.createPage(dto);
+        IPage<UserPageItemVO> sysUserIPage = userMapper.selectUserPage(page, dto);
+        List<UserPageItemVO> sysUsers = sysUserIPage.getRecords();
+        Set<Long> deptIds = sysUsers.stream().filter(Objects::nonNull)
+                .map(UserPageItemVO::getDeptId)
+                .filter(Objects::nonNull).collect(Collectors.toSet());
+
+        List<SysDept> sysDepts = deptMapper.selectList(
+                Wrappers.lambdaQuery(SysDept.class).in(SysDept::getId, deptIds)
+        );
+
+        Map<Long, SysDept> deptMap = new HashMap<>();
+        for (SysDept dept : sysDepts)
+        {
+            Long id = dept.getId();
+            if (!deptMap.containsKey(id)) {
+                deptMap.put(id, dept);
+            }
+        }
+
+        IPage<UserPageItemVO> resultPage = sysUserIPage.convert(item -> {
+            if (item == null)
+            {
+                return null;
+            }
+            UserPageItemVO vo = new UserPageItemVO();
+            BeanUtils.copyProperties(item, vo);
+            Long deptId = item.getDeptId();
+            SysDept sysDept = deptMap.get(deptId);
+            vo.setDeptName(sysDept == null ? null : sysDept.getDeptName());
+            return vo;
+        });
+
+        PageResponse<UserPageItemVO> pageResult = PageUtil.getPageResult(resultPage);
+
+        return Result.success(pageResult);
     }
 }
