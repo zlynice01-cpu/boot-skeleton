@@ -56,6 +56,18 @@ spring:
         nettyThreads: 32
         codec: !<org.redisson.client.codec.StringCodec> {}
         transportMode: "NIO"
+  mail:
+    host: smtp.qq.com
+    port: 587
+    username: zly.nice@qq.com
+    password: llcwdazqkrnedfff
+    protocol: smtp
+    default-encoding: UTF-8
+    auth: true
+    starttls-enable: true
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
 mybatis-plus:
   configuration:

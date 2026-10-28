@@ -30,6 +30,10 @@
             <groupId>com.zly.skeleton</groupId>
             <artifactId>skeleton-biz</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.zly.skeleton</groupId>
+            <artifactId>skeleton-sms</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
