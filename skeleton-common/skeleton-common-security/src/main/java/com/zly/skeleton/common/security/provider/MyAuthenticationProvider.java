@@ -24,7 +24,6 @@ import java.io.IOException;
  * @since 2026/10/24 19:57
  */
 @Component
-@RequiredArgsConstructor
 public class MyAuthenticationProvider extends DaoAuthenticationProvider
 {
 

@@ -3,6 +3,8 @@ package com.zly.skeleton.common.security.entity;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -12,8 +14,11 @@ import java.time.LocalDateTime;
  * @since 2026/10/24 11:35
  */
 @Data
-public class CaptchaInfo
+public class CaptchaInfo implements Serializable
 {
+
+    @Serial
+    private static final long serialVersionUID = 2L;
 
     // 验证码
     private String code;

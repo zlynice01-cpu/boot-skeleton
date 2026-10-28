@@ -40,6 +40,11 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Spring Session + Redis：HttpSession 持久化到 Redis，支持多实例共享登录态 -->
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
