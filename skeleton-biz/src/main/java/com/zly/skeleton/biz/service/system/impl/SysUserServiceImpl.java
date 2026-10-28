@@ -90,38 +90,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     {
         IPage<UserPageItemVO> page = PageUtil.createPage(dto);
         IPage<UserPageItemVO> sysUserIPage = userMapper.selectUserPage(page, dto);
-        List<UserPageItemVO> sysUsers = sysUserIPage.getRecords();
-        Set<Long> deptIds = sysUsers.stream().filter(Objects::nonNull)
-                .map(UserPageItemVO::getDeptId)
-                .filter(Objects::nonNull).collect(Collectors.toSet());
-
-        List<SysDept> sysDepts = deptMapper.selectList(
-                Wrappers.lambdaQuery(SysDept.class).in(SysDept::getId, deptIds)
-        );
-
-        Map<Long, SysDept> deptMap = new HashMap<>();
-        for (SysDept dept : sysDepts)
-        {
-            Long id = dept.getId();
-            if (!deptMap.containsKey(id)) {
-                deptMap.put(id, dept);
-            }
-        }
-
-        IPage<UserPageItemVO> resultPage = sysUserIPage.convert(item -> {
-            if (item == null)
-            {
-                return null;
-            }
-            UserPageItemVO vo = new UserPageItemVO();
-            BeanUtils.copyProperties(item, vo);
-            Long deptId = item.getDeptId();
-            SysDept sysDept = deptMap.get(deptId);
-            vo.setDeptName(sysDept == null ? null : sysDept.getDeptName());
-            return vo;
-        });
-
-        PageResponse<UserPageItemVO> pageResult = PageUtil.getPageResult(resultPage);
+        PageResponse<UserPageItemVO> pageResult = PageUtil.getPageResult(sysUserIPage);
 
         return Result.success(pageResult);
     }

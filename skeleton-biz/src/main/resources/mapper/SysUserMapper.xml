@@ -3,7 +3,8 @@
 <mapper namespace="com.zly.skeleton.biz.mapper.SysUserMapper">
 
     <select id="selectUserPage" resultType="com.zly.skeleton.biz.domain.user.vo.UserPageItemVO">
-        select u.id as id, d.id as deptId, u.username, u.nickname, u.email, u.phone, u.avatar, u.status
+        select u.id as id, u.username, u.nickname, u.email, u.phone, u.avatar, u.statusm,
+            d.dept_name
         from sys_user as u
         left join sys_dept as d on u.is_deleted = 'N' and d.is_deleted = 'N' and u.dept_id = d.id
         <where>

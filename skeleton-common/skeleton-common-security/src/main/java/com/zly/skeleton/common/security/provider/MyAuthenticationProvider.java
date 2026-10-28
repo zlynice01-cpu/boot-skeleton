@@ -6,25 +6,25 @@ import com.zly.skeleton.common.security.entity.LoginParamDTO;
 import com.zly.skeleton.common.web.constants.HttpConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
 
 /**
- *
+ * 登录
  * @author ZLY
  * @since 2026/10/24 19:57
  */
+@Component
+@RequiredArgsConstructor
 public class MyAuthenticationProvider extends DaoAuthenticationProvider
 {
 

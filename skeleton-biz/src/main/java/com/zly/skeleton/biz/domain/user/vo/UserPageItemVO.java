@@ -14,8 +14,6 @@ public class UserPageItemVO
     // 用户id
     private Long id;
 
-    private Long deptId;
-
     // 用户名
     private String username;
 

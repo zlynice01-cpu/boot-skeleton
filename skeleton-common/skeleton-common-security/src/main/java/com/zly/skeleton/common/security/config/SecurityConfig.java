@@ -17,7 +17,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -34,6 +34,8 @@ public class SecurityConfig
 {
 
     private final MyUserDetailsService userDetailsService;
+    private final MyAuthenticationProvider myAuthenticationProvider;
+    private final AuthSuccessHandler successHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -48,7 +50,7 @@ public class SecurityConfig
 
     @Bean
     MyAuthenticationProvider myAuthenticationProvider() {
-        MyAuthenticationProvider provider = new MyAuthenticationProvider();
+        MyAuthenticationProvider provider = myAuthenticationProvider;
         provider.setUserDetailsService(userDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
@@ -58,15 +60,13 @@ public class SecurityConfig
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                // 有状态会话：Security 上下文会写入 HttpSession，下一个请求自动还原
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/doLogin", "/error", "/captcha/create").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin
                         .loginProcessingUrl("/doLogin")
-                        .successHandler(new AuthSuccessHandler())
+                        .successHandler(successHandler)
                         .failureHandler(new AuthFailureHandler()))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
@@ -75,8 +75,7 @@ public class SecurityConfig
                         .clearAuthentication(true)
                         .deleteCookies("JSESSIONID"))
                 .exceptionHandling(customizer -> customizer
-                        .authenticationEntryPoint(new AuthenticationEntryPointHandler()))
-                .rememberMe(r -> r.key("remember"));
+                        .authenticationEntryPoint(new AuthenticationEntryPointHandler()));
         return http.build();
     }
 
@@ -86,16 +85,5 @@ public class SecurityConfig
                 .role("admin").implies("user")
                 .build();
     }
-
-    /*@Bean
-    public LoginFilter loginFilter(AuthenticationManager authenticationManager) {
-        LoginFilter loginFilter = new LoginFilter();
-        loginFilter.setAuthenticationSuccessHandler(new AuthSuccessHandler());
-        loginFilter.setAuthenticationFailureHandler(new AuthFailureHandler());
-        loginFilter.setAuthenticationManager(authenticationManager);
-        loginFilter.setFilterProcessesUrl("/doLogin");
-        return loginFilter;
-    }*/
-
 
 }
