@@ -1,4 +1,4 @@
-package com.zly.skeleton.biz.controller.system;
+package com.zly.skeleton.core.controller.system;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

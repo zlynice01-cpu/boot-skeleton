@@ -1,4 +1,4 @@
-package com.zly.skeleton.biz.controller.system;
+package com.zly.skeleton.core.controller.system;
 
 import com.zly.skeleton.biz.domain.dept.dto.CheckDeptDTO;
 import com.zly.skeleton.biz.domain.user.dto.CreateUserDTO;

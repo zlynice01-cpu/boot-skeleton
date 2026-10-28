@@ -1,4 +1,4 @@
-package com.zly.skeleton.biz.controller.captcha;
+package com.zly.skeleton.core.controller.captcha;
 
 import com.zly.skeleton.common.security.entity.CaptchaInfo;
 import com.zly.skeleton.common.security.provider.MyAuthenticationProvider;

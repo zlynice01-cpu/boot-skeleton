@@ -21,6 +21,8 @@
     <modules>
         <module>skeleton-common</module>
         <module>skeleton-biz</module>
+        <module>skeleton-core</module>
+        <module>skeleton-ems</module>
     </modules>
 
     <properties>
