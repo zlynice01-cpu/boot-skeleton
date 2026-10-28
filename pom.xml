@@ -22,7 +22,7 @@
         <module>skeleton-common</module>
         <module>skeleton-biz</module>
         <module>skeleton-core</module>
-        <module>skeleton-ems</module>
+        <module>skeleton-sms</module>
     </modules>
 
     <properties>
@@ -109,6 +109,11 @@
             <dependency>
                 <groupId>com.zly.skeleton</groupId>
                 <artifactId>skeleton-common-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zly.skeleton</groupId>
+                <artifactId>skeleton-sms</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

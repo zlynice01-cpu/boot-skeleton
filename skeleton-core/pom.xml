@@ -28,26 +28,6 @@
         <!-- 内部模块 -->
         <dependency>
             <groupId>com.zly.skeleton</groupId>
-            <artifactId>skeleton-common-mybatisplus</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.zly.skeleton</groupId>
-            <artifactId>skeleton-common-cache</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.zly.skeleton</groupId>
-            <artifactId>skeleton-common-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.zly.skeleton</groupId>
-            <artifactId>skeleton-common-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.zly.skeleton</groupId>
-            <artifactId>skeleton-common-util</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.zly.skeleton</groupId>
             <artifactId>skeleton-biz</artifactId>
         </dependency>
     </dependencies>
