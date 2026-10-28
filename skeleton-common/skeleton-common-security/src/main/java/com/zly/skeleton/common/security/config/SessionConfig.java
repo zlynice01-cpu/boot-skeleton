@@ -13,7 +13,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
  */
 @Configuration
 @EnableRedisIndexedHttpSession(
-        maxInactiveIntervalInSeconds = 1800,
+        maxInactiveIntervalInSeconds = 2000,
         redisNamespace = "skeleton:session"
 )
 public class SessionConfig

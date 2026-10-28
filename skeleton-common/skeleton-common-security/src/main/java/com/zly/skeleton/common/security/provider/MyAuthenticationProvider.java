@@ -6,7 +6,6 @@ import com.zly.skeleton.common.security.entity.LoginParamDTO;
 import com.zly.skeleton.common.web.constants.HttpConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;

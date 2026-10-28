@@ -1,9 +1,7 @@
 package com.zly.skeleton.biz.service.system.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zly.skeleton.biz.domain.user.dto.UserPageDTO;
@@ -38,7 +36,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
     private final SysUserMapper userMapper;
     private final SysRoleMapper roleMapper;
-    private final SysDeptMapper deptMapper;
     private final SysPermissionMapper permissionMapper;
 
     @Override

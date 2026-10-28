@@ -1,6 +1,5 @@
 package com.zly.skeleton.common.security.config;
 
-import com.zly.skeleton.cache.util.RedisCache;
 import com.zly.skeleton.common.security.handler.AuthFailureHandler;
 import com.zly.skeleton.common.security.handler.AuthSuccessHandler;
 import com.zly.skeleton.common.security.handler.AuthenticationEntryPointHandler;
