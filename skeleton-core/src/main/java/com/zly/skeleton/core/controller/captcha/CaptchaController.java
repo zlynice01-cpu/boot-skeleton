@@ -1,6 +1,7 @@
 package com.zly.skeleton.core.controller.captcha;
 
 import com.zly.skeleton.common.security.entity.CaptchaInfo;
+import com.zly.skeleton.common.security.filter.LoginFilter;
 import com.zly.skeleton.common.security.provider.MyAuthenticationProvider;
 import com.zly.skeleton.common.util.VerifyCodeUtil;
 import com.zly.skeleton.common.web.util.ResponseUtils;
@@ -31,7 +32,7 @@ public class CaptchaController
         String captcha = verifyCodeUtil.getText();
         CaptchaInfo captchaInfo = CaptchaInfo.instance(captcha);
         HttpSession session = request.getSession();
-        session.setAttribute(MyAuthenticationProvider.CAPTCHA_SESSION_KEY, captchaInfo);
+        session.setAttribute(LoginFilter.CAPTCHA_SESSION_KEY, captchaInfo);
         ResponseUtils.writeImage(response, image);
     }
 

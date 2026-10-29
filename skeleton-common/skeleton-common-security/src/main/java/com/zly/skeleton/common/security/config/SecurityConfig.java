@@ -1,5 +1,6 @@
 package com.zly.skeleton.common.security.config;
 
+import com.zly.skeleton.common.security.filter.LoginFilter;
 import com.zly.skeleton.common.security.handler.AuthFailureHandler;
 import com.zly.skeleton.common.security.handler.AuthSuccessHandler;
 import com.zly.skeleton.common.security.handler.AuthenticationEntryPointHandler;
@@ -10,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -81,10 +80,10 @@ public class SecurityConfig
                         .requestMatchers("/doLogin", "/error", "/captcha/create").permitAll()
                         .anyRequest().authenticated()
                 )
-                .formLogin(formLogin -> formLogin
-                        .loginProcessingUrl("/doLogin")
-                        .successHandler(new AuthSuccessHandler())
-                        .failureHandler(new AuthFailureHandler()))
+//                .formLogin(formLogin -> formLogin
+//                        .loginProcessingUrl("/doLogin")
+//                        .successHandler(new AuthSuccessHandler())
+//                        .failureHandler(new AuthFailureHandler()))
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessHandler(new LogoutSuccessfulHandler())
@@ -97,10 +96,13 @@ public class SecurityConfig
     }
 
     @Bean
-    public RoleHierarchy roleHierarchy() {
-        return RoleHierarchyImpl.withDefaultRolePrefix()
-                .role("admin").implies("user")
-                .build();
+    public LoginFilter loginFilter(AuthenticationManager authenticationManager) {
+        LoginFilter loginFilter = new LoginFilter();
+        loginFilter.setAuthenticationSuccessHandler(new AuthSuccessHandler());
+        loginFilter.setAuthenticationFailureHandler(new AuthFailureHandler());
+        loginFilter.setAuthenticationManager(authenticationManager);
+        loginFilter.setFilterProcessesUrl("/doLogin");
+        return loginFilter;
     }
 
 }

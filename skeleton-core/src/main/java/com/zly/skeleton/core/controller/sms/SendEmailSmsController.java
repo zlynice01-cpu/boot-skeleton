@@ -1,11 +1,9 @@
 package com.zly.skeleton.core.controller.sms;
 
 import com.zly.skeleton.common.web.entity.Result;
-import com.zly.skeleton.sms.entity.EmailSmsMessage;
 import com.zly.skeleton.sms.service.SmsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,8 +20,7 @@ public class SendEmailSmsController
     private final SmsService smsService;
 
     @PostMapping("/send")
-    public Result<Void> send(@RequestBody EmailSmsMessage message) {
-        smsService.sendSms(message);
+    public Result<Void> send() {
         return Result.success();
     }
 
