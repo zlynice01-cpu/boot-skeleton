@@ -3,8 +3,7 @@
 <mapper namespace="com.zly.skeleton.biz.mapper.SysUserMapper">
 
     <select id="selectUserPage" resultType="com.zly.skeleton.biz.domain.user.vo.UserPageItemVO">
-        select u.id as id, u.username, u.nickname, u.email, u.phone, u.avatar, u.status,
-            d.dept_name
+        select u.id as id, u.username, u.nickname, u.email, u.phone, u.avatar, u.status, d.dept_name
         from sys_user as u
         left join sys_dept as d on u.is_deleted = 'N' and d.is_deleted = 'N' and u.dept_id = d.id
         <where>
@@ -13,6 +12,15 @@
             </if>
             <if test="dto.nickname != null and dto.nickname != ''">
                 and u.nickname like concat(#{dto.nickname}, '%')
+            </if>
+            <if test="dto.username != null and dto.username != ''">
+                and u.username like concat(#{dto.username}, '%')
+            </if>
+            <if test="dto.phone != null">
+                and u.phone like concat(#{dto.phone}, '%')
+            </if>
+            <if test="dto.status != null">
+                and u.status = #{dto.status}
             </if>
         </where>
     </select>

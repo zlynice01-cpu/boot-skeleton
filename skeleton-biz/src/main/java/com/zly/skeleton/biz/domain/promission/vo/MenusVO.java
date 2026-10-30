@@ -11,7 +11,7 @@ import java.util.List;
  * @since 2026/10/26 17:37
  */
 @Data
-public class PromissionProfileVO implements CreateTree<PromissionProfileVO>
+public class MenusVO implements CreateTree<MenusVO>
 {
     // 权限id
     private Long id;
@@ -47,7 +47,7 @@ public class PromissionProfileVO implements CreateTree<PromissionProfileVO>
     private Integer status;
 
     // 子权限列表
-    private List<PromissionProfileVO> children;
+    private List<MenusVO> children;
 
     @Override
     public String getCode()
@@ -62,7 +62,7 @@ public class PromissionProfileVO implements CreateTree<PromissionProfileVO>
     }
 
     @Override
-    public void setChildren(List<PromissionProfileVO> childrenTree) {
+    public void setChildren(List<MenusVO> childrenTree) {
         this.children = childrenTree;
     }
 

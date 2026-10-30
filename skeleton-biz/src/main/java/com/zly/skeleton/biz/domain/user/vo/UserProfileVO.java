@@ -1,8 +1,9 @@
 package com.zly.skeleton.biz.domain.user.vo;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.zly.skeleton.biz.domain.dept.vo.DeptProfileVO;
-import com.zly.skeleton.biz.domain.promission.vo.PromissionProfileVO;
+import com.zly.skeleton.biz.domain.promission.vo.MenusVO;
 import com.zly.skeleton.biz.domain.role.vo.RoleProfileVO;
 import com.zly.skeleton.common.util.TreeUtil;
 import com.zly.skeleton.mybatisplus.entity.SysPermission;
@@ -54,18 +55,24 @@ public class UserProfileVO
     private List<RoleProfileVO> roleList;
 
     // 权限列表
-    private List<PromissionProfileVO> promissionList;
+    private List<String> permissions;
 
-    public static UserProfileVO createVO(SysUser sysUser, List<SysRole> roleList, List<SysPermission> permissionList) {
+    private List<MenusVO> menus;
+
+    public static UserProfileVO createVO(SysUser sysUser, List<SysRole> roleList, List<SysPermission> permissionList)
+    {
         UserProfileVO vo = new UserProfileVO();
-        if (sysUser != null) {
+        if (sysUser != null)
+        {
             BeanUtils.copyProperties(sysUser, vo);
         }
 
         List<RoleProfileVO> roles = List.of();
-        List<PromissionProfileVO> permissions = List.of();
+        List<MenusVO> menus = List.of();
+        List<String> permissions = List.of();
 
-        if (ObjectUtils.isNotEmpty(roleList)) {
+        if (ObjectUtils.isNotEmpty(roleList))
+        {
             roles = roleList.stream().filter(Objects::nonNull)
                     .map(item -> {
                         RoleProfileVO roleVO = new RoleProfileVO();
@@ -74,20 +81,28 @@ public class UserProfileVO
                     }).toList();
         }
 
-        if (ObjectUtils.isNotEmpty(permissionList)) {
-            permissions = permissionList.stream()
+        if (ObjectUtils.isNotEmpty(permissionList))
+        {
+            menus = permissionList.stream()
                     .filter(Objects::nonNull)
                     .map(item -> {
-                        PromissionProfileVO promissionVO = new PromissionProfileVO();
+                        MenusVO promissionVO = new MenusVO();
                         BeanUtils.copyProperties(item, promissionVO);
                         return promissionVO;
                     })
                     .toList();
-            permissions = TreeUtil.buildTree(permissions, "0");
+            menus = TreeUtil.buildTree(menus, "0");
+
+            permissions = permissionList.stream()
+                    .filter(Objects::nonNull)
+                    .map(SysPermission::getPermissionKey)
+                    .filter(StringUtils::isNotBlank)
+                    .toList();
         }
 
         vo.setRoleList(roles);
-        vo.setPromissionList(permissions);
+        vo.setMenus(menus);
+        vo.setPermissions(permissions);
         return vo;
     }
 

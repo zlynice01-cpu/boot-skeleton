@@ -14,7 +14,10 @@ public enum BizErrorEnum implements BaseError
     DEPT_NOT_FOUND("未找到部门", 1001),
     DEPT_EXPIRE("部门失效", 1002),
 
-    ROLE_NOT_FOUND("未找到角色", 1003),
+    ROLE_NOT_FOUND("未找到角色", 2001),
+
+    USERNAME_EXIST("用户名已存在", 3001),
+    USER_NOT_FOUND("用户未找到", 3002),
 
     ;
 

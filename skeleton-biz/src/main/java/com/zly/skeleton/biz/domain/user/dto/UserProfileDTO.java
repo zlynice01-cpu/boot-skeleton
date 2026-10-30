@@ -13,4 +13,6 @@ public class UserProfileDTO
 
     private Long userId;
 
+    private String username;
+
 }

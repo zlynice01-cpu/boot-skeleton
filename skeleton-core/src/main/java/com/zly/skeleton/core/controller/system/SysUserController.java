@@ -13,7 +13,6 @@ import com.zly.skeleton.common.web.entity.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,22 +42,21 @@ public class SysUserController
         checkDeptDTO.setCheckStatus(true);
         deptService.checkDeptId(checkDeptDTO);
 
-        SeCreateUserDTO seCreateUserDTO = new SeCreateUserDTO();
-        BeanUtils.copyProperties(dto, seCreateUserDTO);
-        return userService.create(seCreateUserDTO);
+        return userService.create(dto);
     }
 
     @PostMapping("/profile")
-    @PreAuthorize("hasAuthority('system:user:list')")
+    // @PreAuthorize("hasAuthority('system:user:list')")
     public Result<UserProfileVO> profile(@Valid @RequestBody UserProfileDTO dto)
     {
         return userService.getUserProfile(dto);
     }
 
     @PostMapping("/page")
-    @PreAuthorize("hasAuthority('system:user:list')")
+    // @PreAuthorize("hasAuthority('system:user:list')")
     public Result<PageResponse<UserPageItemVO>> getPage(@Valid @RequestBody UserPageDTO dto) {
         return userService.getPage(dto);
     }
+
 
 }

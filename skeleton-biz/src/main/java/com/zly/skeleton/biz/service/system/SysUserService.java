@@ -1,6 +1,7 @@
 package com.zly.skeleton.biz.service.system;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zly.skeleton.biz.domain.user.dto.CreateUserDTO;
 import com.zly.skeleton.biz.domain.user.dto.UserPageDTO;
 import com.zly.skeleton.biz.domain.user.dto.UserProfileDTO;
 import com.zly.skeleton.biz.domain.user.vo.UserPageItemVO;
@@ -21,7 +22,7 @@ public interface SysUserService extends IService<SysUser>
 
     SysUser getByUsername(String username);
 
-    Result<Void> create(SeCreateUserDTO dto);
+    Result<Void> create(CreateUserDTO dto);
 
     Result<UserProfileVO> getUserProfile(UserProfileDTO dto);
 

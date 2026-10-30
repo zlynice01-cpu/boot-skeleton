@@ -19,4 +19,13 @@ public class UserPageDTO extends PageRequest
     // 昵称
     private String nickname;
 
+    // 账号
+    private String username;
+
+    // 手机号
+    private String phone;
+
+    // 状态
+    private Integer status;
+
 }
