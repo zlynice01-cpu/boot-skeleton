@@ -6,6 +6,7 @@ import com.zly.skeleton.biz.enums.StatusEnum;
 import com.zly.skeleton.biz.service.system.SysDeptService;
 import com.zly.skeleton.common.web.entity.Result;
 import com.zly.skeleton.mybatisplus.entity.SysDept;
+import com.zly.skeleton.mybatisplus.entity.SysPermission;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;

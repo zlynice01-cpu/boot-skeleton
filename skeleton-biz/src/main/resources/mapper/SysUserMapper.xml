@@ -7,6 +7,7 @@
         from sys_user as u
         left join sys_dept as d on u.is_deleted = 'N' and d.is_deleted = 'N' and u.dept_id = d.id
         <where>
+            u.is_deleted = 'N'
             <if test="dto.deptId != null">
                 and d.id = #{dto.deptId}
             </if>

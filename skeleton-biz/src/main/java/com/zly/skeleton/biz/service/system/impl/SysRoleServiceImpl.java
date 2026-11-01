@@ -1,15 +1,20 @@
 package com.zly.skeleton.biz.service.system.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zly.skeleton.biz.domain.role.dto.RolePageDTO;
 import com.zly.skeleton.biz.domain.role.vo.RoleListItemVO;
+import com.zly.skeleton.biz.domain.role.vo.RolePageItemVO;
 import com.zly.skeleton.biz.enums.StatusEnum;
 import com.zly.skeleton.biz.mapper.SysRoleMapper;
 import com.zly.skeleton.biz.service.system.SysRoleService;
 import com.zly.skeleton.common.web.entity.Result;
+import com.zly.skeleton.mybatisplus.entity.PageResponse;
 import com.zly.skeleton.mybatisplus.entity.SysRole;
+import com.zly.skeleton.mybatisplus.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -51,5 +56,17 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
                     return vo;
                 }).toList();
         return Result.success(voList);
+    }
+
+    @Override
+    public Result<PageResponse<RolePageItemVO>> getRolePage(RolePageDTO dto)
+    {
+        IPage<SysRole> page = PageUtil.createPage(dto);
+        IPage<RolePageItemVO> voPage = roleMapper.selectPage(page, Wrappers.lambdaQuery(SysRole.class))
+                .convert(RolePageItemVO::entityToVO);
+
+        PageResponse<RolePageItemVO> voResult = PageUtil.getPageResult(voPage);
+
+        return Result.success(voResult);
     }
 }

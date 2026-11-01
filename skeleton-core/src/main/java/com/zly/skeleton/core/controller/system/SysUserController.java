@@ -1,22 +1,17 @@
 package com.zly.skeleton.core.controller.system;
 
 import com.zly.skeleton.biz.domain.dept.dto.CheckDeptDTO;
-import com.zly.skeleton.biz.domain.user.dto.CreateUserDTO;
-import com.zly.skeleton.biz.domain.user.dto.UserPageDTO;
-import com.zly.skeleton.biz.domain.user.dto.UserProfileDTO;
+import com.zly.skeleton.biz.domain.user.dto.*;
+import com.zly.skeleton.biz.domain.user.vo.LoginUserVO;
 import com.zly.skeleton.biz.domain.user.vo.UserPageItemVO;
 import com.zly.skeleton.biz.domain.user.vo.UserProfileVO;
 import com.zly.skeleton.biz.service.system.SysDeptService;
-import com.zly.skeleton.common.security.entity.user.dto.SeCreateUserDTO;
 import com.zly.skeleton.biz.service.system.SysUserService;
+import com.zly.skeleton.common.security.util.UserContextUtil;
 import com.zly.skeleton.common.web.entity.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.BeanUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.zly.skeleton.mybatisplus.entity.PageResponse;
 
 /**
@@ -52,10 +47,30 @@ public class SysUserController
         return userService.getUserProfile(dto);
     }
 
+    @PostMapping("/getLoginUser")
+    public Result<LoginUserVO> getLoginUser()
+    {
+        String username = UserContextUtil.getUsername();
+        UserProfileDTO dto = new UserProfileDTO();
+        dto.setUsername(username);
+        return userService.getLoginUser(dto);
+    }
+
     @PostMapping("/page")
     // @PreAuthorize("hasAuthority('system:user:list')")
     public Result<PageResponse<UserPageItemVO>> getPage(@Valid @RequestBody UserPageDTO dto) {
         return userService.getPage(dto);
+    }
+
+    @PostMapping("/edit")
+    public Result<Void> edit(@Valid @RequestBody EditUserProfileDTO dto) {
+        return userService.edit(dto);
+    }
+
+    @PostMapping("/delete")
+    public Result<Void> delete(@Valid @RequestBody DeleteUserDTO dto) {
+        userService.removeById(dto.getId());
+        return Result.success();
     }
 
 

@@ -4,6 +4,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zly.skeleton.mybatisplus.entity.SysUserRole;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 /**
  *
  * @author ZLY
@@ -11,5 +15,10 @@ import org.springframework.stereotype.Service;
  */
 public interface SysUserRoleService extends IService<SysUserRole>
 {
+
+    void updateUserRole(Long userId, Collection<Long> roleIds);
+
+    Set<Long> getRoleIdsByUserId(Long userId);
+
 }
     

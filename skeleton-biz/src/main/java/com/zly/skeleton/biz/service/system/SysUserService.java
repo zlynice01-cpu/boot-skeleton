@@ -2,8 +2,10 @@ package com.zly.skeleton.biz.service.system;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zly.skeleton.biz.domain.user.dto.CreateUserDTO;
+import com.zly.skeleton.biz.domain.user.dto.EditUserProfileDTO;
 import com.zly.skeleton.biz.domain.user.dto.UserPageDTO;
 import com.zly.skeleton.biz.domain.user.dto.UserProfileDTO;
+import com.zly.skeleton.biz.domain.user.vo.LoginUserVO;
 import com.zly.skeleton.biz.domain.user.vo.UserPageItemVO;
 import com.zly.skeleton.biz.domain.user.vo.UserProfileVO;
 import com.zly.skeleton.mybatisplus.entity.SysUser;
@@ -26,7 +28,11 @@ public interface SysUserService extends IService<SysUser>
 
     Result<UserProfileVO> getUserProfile(UserProfileDTO dto);
 
+    Result<LoginUserVO> getLoginUser(UserProfileDTO dto);
+
     Result<PageResponse<UserPageItemVO>> getPage(@Valid UserPageDTO dto);
+
+    Result<Void> edit(@Valid EditUserProfileDTO dto);
 
 }
     

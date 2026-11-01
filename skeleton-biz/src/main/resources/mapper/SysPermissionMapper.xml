@@ -6,7 +6,7 @@
         select DISTINCT p.*
         from sys_permission as p
         left join sys_role_permission rp on p.is_deleted = 'N' and rp.is_deleted = 'N' and p.id = rp.permission_id
-        where rp.role_id in
+        where p.is_deleted = 'N' and rp.role_id in
         <foreach collection="roleIdSet" item="item" open="(" separator=","  close=")">
             #{item}
         </foreach>

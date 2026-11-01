@@ -7,7 +7,7 @@
         r.update_by, r.update_time, r.is_deleted
         from sys_role as r
         left join sys_user_role as ur on ur.role_id = r.id and r.is_deleted = 'N' and ur.is_deleted = 'N'
-        where  ur.user_id = #{userId}
+        where r.is_deleted = 'N' and ur.user_id = #{userId}
     </select>
 
 </mapper>

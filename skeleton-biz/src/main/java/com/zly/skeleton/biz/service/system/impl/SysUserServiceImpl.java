@@ -5,18 +5,21 @@ import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zly.skeleton.biz.domain.dept.vo.DeptProfileVO;
+import com.zly.skeleton.biz.domain.role.vo.RoleProfileVO;
 import com.zly.skeleton.biz.domain.user.dto.CreateUserDTO;
+import com.zly.skeleton.biz.domain.user.dto.EditUserProfileDTO;
 import com.zly.skeleton.biz.domain.user.dto.UserPageDTO;
 import com.zly.skeleton.biz.domain.user.dto.UserProfileDTO;
+import com.zly.skeleton.biz.domain.user.vo.LoginUserVO;
 import com.zly.skeleton.biz.domain.user.vo.UserPageItemVO;
 import com.zly.skeleton.biz.domain.user.vo.UserProfileVO;
+import com.zly.skeleton.biz.mapper.SysDeptMapper;
 import com.zly.skeleton.biz.mapper.SysPermissionMapper;
 import com.zly.skeleton.biz.mapper.SysRoleMapper;
 import com.zly.skeleton.biz.mapper.SysUserMapper;
-import com.zly.skeleton.biz.service.system.SysRoleService;
 import com.zly.skeleton.biz.service.system.SysUserRoleService;
 import com.zly.skeleton.biz.service.system.SysUserService;
-import com.zly.skeleton.common.security.entity.user.dto.SeCreateUserDTO;
 import com.zly.skeleton.common.web.entity.Result;
 import com.zly.skeleton.common.web.enums.BizErrorEnum;
 import com.zly.skeleton.common.web.exception.BizException;
@@ -43,6 +46,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private final SysRoleMapper roleMapper;
     private final SysUserRoleService userRoleService;
     private final SysPermissionMapper permissionMapper;
+    private final SysDeptMapper deptMapper;
 
     @Override
     public SysUser getByUsername(String username)
@@ -93,6 +97,36 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     @Override
     public Result<UserProfileVO> getUserProfile(UserProfileDTO dto)
     {
+        Result<LoginUserVO> userInfo = getLoginUser(dto);
+        Boolean flag = userInfo.getFlag();
+        if (Boolean.FALSE.equals(flag)) {
+            return Result.error(userInfo.getCode(), userInfo.getMsg());
+        }
+        LoginUserVO data = userInfo.getData();
+        if (data == null) {
+            return Result.success(null);
+        }
+        UserProfileVO vo = new UserProfileVO();
+        BeanUtils.copyProperties(data, vo);
+        List<RoleProfileVO> roleList = data.getRoleList();
+        if (ObjectUtils.isNotEmpty(roleList)) {
+            Set<Long> roleIds = roleList.stream().filter(Objects::nonNull)
+                    .map(RoleProfileVO::getId)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toSet());
+            vo.setRoleIds(roleIds);
+        }
+        DeptProfileVO deptInfo = data.getDeptInfo();
+        if (deptInfo != null) {
+            vo.setDeptId(deptInfo.getId());
+        }
+
+        return Result.success(vo);
+    }
+
+    @Override
+    public Result<LoginUserVO> getLoginUser(UserProfileDTO dto)
+    {
         String username = dto.getUsername();
         Long userId = dto.getUserId();
         SysUser user = null;
@@ -108,6 +142,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 
         userId = userId == null ? user.getId() : userId;
 
+        Long deptId = user.getDeptId();
         List<SysRole> roles = roleMapper.selectRoleListByUserId(userId);
         List<SysPermission> permissions = new ArrayList<>();
         if (ObjectUtils.isNotEmpty(roles))
@@ -119,7 +154,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             permissions = permissionMapper.selectPermissionsByRoleIds(roleIdSet);
         }
 
-        UserProfileVO vo = UserProfileVO.createVO(user, roles, permissions);
+        SysDept sysDept = null;
+        if (deptId != null) {
+            sysDept = deptMapper.selectById(deptId);
+        }
+
+        LoginUserVO vo = LoginUserVO.createVO(user, roles, permissions, sysDept);
 
         return Result.success(vo);
     }
@@ -132,5 +172,19 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         PageResponse<UserPageItemVO> pageResult = PageUtil.getPageResult(sysUserIPage);
 
         return Result.success(pageResult);
+    }
+
+    @Override
+    public Result<Void> edit(EditUserProfileDTO dto)
+    {
+        SysUser userEntity = new SysUser();
+        BeanUtils.copyProperties(dto, userEntity);
+        // 更新用户信息
+        updateById(userEntity);
+        Long userId = userEntity.getId();
+        List<Long> roleIds = dto.getRoleIds();
+        // 更新角色关联信息
+        userRoleService.updateUserRole(userId, roleIds);
+        return Result.success();
     }
 }

@@ -1,6 +1,8 @@
 package com.zly.skeleton.biz.service.system;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zly.skeleton.biz.domain.promission.vo.MenusVO;
+import com.zly.skeleton.common.web.entity.Result;
 import com.zly.skeleton.mybatisplus.entity.SysPermission;
 
 import java.util.Collection;
@@ -15,6 +17,8 @@ public interface SysPermissionService extends IService<SysPermission>
 {
 
     List<SysPermission> getPermissionsByRoleIds(Collection<Long> roleIdSet);
+
+    Result<List<MenusVO>> getPermissionTree();
 
 }
     

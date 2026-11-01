@@ -12,6 +12,7 @@ import com.zly.skeleton.mybatisplus.entity.SysUser;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,61 +50,9 @@ public class UserProfileVO
     private Integer status;
 
     // 部门id
-    private DeptProfileVO deptInfo;
+    private Long deptId;
 
-    // 角色列表
-    private List<RoleProfileVO> roleList;
-
-    // 权限列表
-    private List<String> permissions;
-
-    private List<MenusVO> menus;
-
-    public static UserProfileVO createVO(SysUser sysUser, List<SysRole> roleList, List<SysPermission> permissionList)
-    {
-        UserProfileVO vo = new UserProfileVO();
-        if (sysUser != null)
-        {
-            BeanUtils.copyProperties(sysUser, vo);
-        }
-
-        List<RoleProfileVO> roles = List.of();
-        List<MenusVO> menus = List.of();
-        List<String> permissions = List.of();
-
-        if (ObjectUtils.isNotEmpty(roleList))
-        {
-            roles = roleList.stream().filter(Objects::nonNull)
-                    .map(item -> {
-                        RoleProfileVO roleVO = new RoleProfileVO();
-                        BeanUtils.copyProperties(item, roleVO);
-                        return roleVO;
-                    }).toList();
-        }
-
-        if (ObjectUtils.isNotEmpty(permissionList))
-        {
-            menus = permissionList.stream()
-                    .filter(Objects::nonNull)
-                    .map(item -> {
-                        MenusVO promissionVO = new MenusVO();
-                        BeanUtils.copyProperties(item, promissionVO);
-                        return promissionVO;
-                    })
-                    .toList();
-            menus = TreeUtil.buildTree(menus, "0");
-
-            permissions = permissionList.stream()
-                    .filter(Objects::nonNull)
-                    .map(SysPermission::getPermissionKey)
-                    .filter(StringUtils::isNotBlank)
-                    .toList();
-        }
-
-        vo.setRoleList(roles);
-        vo.setMenus(menus);
-        vo.setPermissions(permissions);
-        return vo;
-    }
+    // 角色id列表
+    private Collection<Long> roleIds;
 
 }
