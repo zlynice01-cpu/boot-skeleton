@@ -1,19 +1,17 @@
 package com.zly.skeleton.biz.service.system.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zly.skeleton.biz.domain.promission.dto.CreatePermissionDTO;
 import com.zly.skeleton.biz.domain.promission.dto.EditPermissionDTO;
 import com.zly.skeleton.biz.domain.promission.dto.MenusTreeDTO;
 import com.zly.skeleton.biz.domain.promission.vo.MenusVO;
-import com.zly.skeleton.biz.enums.StatusEnum;
 import com.zly.skeleton.biz.mapper.SysPermissionMapper;
 import com.zly.skeleton.biz.service.system.SysPermissionService;
 import com.zly.skeleton.common.util.TreeUtil;
 import com.zly.skeleton.common.web.entity.Result;
 import com.zly.skeleton.mybatisplus.entity.SysPermission;
-import com.zly.skeleton.mybatisplus.entity.SysRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -55,7 +53,7 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
         List<SysPermission> menuList = null;
         if (roleId == null)
         {
-            menuList = list();
+            menuList = list(Wrappers.lambdaQuery(SysPermission.class).orderByAsc(SysPermission::getSort));
         } else {
             menuList = permissionMapper.selectPermissionsByRoleIds(List.of(roleId));
         }
@@ -75,7 +73,6 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     {
         SysPermission permission = new SysPermission();
         BeanUtils.copyProperties(dto, permission);
-        postponeSort(dto.getSort());
         save(permission);
     }
 
@@ -84,33 +81,6 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     {
         SysPermission permission = new SysPermission();
         BeanUtils.copyProperties(dto, permission);
-        postponeSort(dto.getSort(), dto.getId());
         updateById(permission);
-    }
-
-    @Override
-    public void postponeSort(Integer currentSort)
-    {
-        postponeSort(currentSort, null);
-    }
-
-    @Override
-    public void postponeSort(Integer currentSort, Long id)
-    {
-        postponeSort(currentSort, 9999, id);
-    }
-
-    @Override
-    public void postponeSort(Integer currentSort, Integer maxSort, Long id)
-    {
-        LambdaQueryWrapper<SysPermission> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SysPermission::getSort, currentSort)
-                .eq(SysPermission::getStatus, StatusEnum.YES.getCode());
-        List<SysPermission> roles = permissionMapper.selectList(queryWrapper);
-        if (ObjectUtils.isEmpty(roles))
-        {
-            return;
-        }
-        permissionMapper.postponeSort(currentSort, maxSort, id);
     }
 }

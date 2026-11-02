@@ -10,6 +10,7 @@
         <foreach collection="roleIdSet" item="item" open="(" separator=","  close=")">
             #{item}
         </foreach>
+        order by p.sort
     </select>
 
     <update id="postponeSort">

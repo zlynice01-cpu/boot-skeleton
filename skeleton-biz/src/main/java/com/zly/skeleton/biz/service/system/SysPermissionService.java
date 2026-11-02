@@ -26,11 +26,5 @@ public interface SysPermissionService extends IService<SysPermission>
     void create(@Valid CreatePermissionDTO dto);
 
     void edit(@Valid EditPermissionDTO dto);
-
-    void postponeSort(Integer currentSort);
-
-    void postponeSort(Integer currentSort, Long id);
-
-    void postponeSort(Integer currentSort, Integer maxSort, Long id);
 }
     

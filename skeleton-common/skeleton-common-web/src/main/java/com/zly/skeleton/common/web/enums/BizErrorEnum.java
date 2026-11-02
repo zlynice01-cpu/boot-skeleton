@@ -19,6 +19,10 @@ public enum BizErrorEnum implements BaseError
     USERNAME_EXIST("用户名已存在", 3001),
     USER_NOT_FOUND("用户未找到", 3002),
 
+    CONFIG_NOT_FOUND("未找到配置", 4001),
+    CONFIG_KEY_EXIST("参数键名已存在", 4002),
+    CONFIG_BUILT_IN_NOT_DELETE("系统内置参数不允许删除", 4003),
+
     ;
 
     private final String msg;

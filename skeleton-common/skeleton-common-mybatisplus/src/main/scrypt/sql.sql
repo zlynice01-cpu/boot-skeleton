@@ -4,6 +4,7 @@ DROP TABLE IF EXISTS sys_permission;
 DROP TABLE IF EXISTS sys_role;
 DROP TABLE IF EXISTS sys_user;
 DROP TABLE IF EXISTS sys_dept;
+DROP TABLE IF EXISTS sys_config;
 
 -- 1. 用户表 sys_user
 CREATE TABLE sys_user (
@@ -113,6 +114,24 @@ CREATE TABLE sys_dept (
                           KEY idx_is_deleted (is_deleted)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部门表';
 
+-- 7. 系统配置表 sys_config
+CREATE TABLE sys_config (
+                            id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '配置ID',
+                            config_name VARCHAR(100) NOT NULL COMMENT '参数名称',
+                            config_key VARCHAR(100) NOT NULL COMMENT '参数键名',
+                            config_value VARCHAR(500) NOT NULL DEFAULT '' COMMENT '参数值',
+                            config_type TINYINT NOT NULL DEFAULT 1 COMMENT '类型 0系统内置 1自定义',
+                            remark VARCHAR(500) DEFAULT '' COMMENT '备注',
+                            create_by BIGINT DEFAULT NULL COMMENT '创建人ID',
+                            create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                            update_by BIGINT DEFAULT NULL COMMENT '更新人ID',
+                            update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                            is_deleted CHAR(1) NOT NULL DEFAULT 'N' COMMENT '是否删除 N-未删除 Y-已删除',
+                            UNIQUE KEY uk_config_key (config_key),
+                            KEY idx_config_type (config_type),
+                            KEY idx_is_deleted (is_deleted)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统配置表';
+
 
 -- 插入部门
 INSERT INTO sys_dept (id, parent_id, dept_name, sort, status, create_by, create_time, update_by, update_time, is_deleted)
@@ -149,7 +168,12 @@ VALUES
     (5, 2, '用户编辑', 'system:user:edit', 'B', '', '', '', 3, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
     (6, 2, '用户删除', 'system:user:remove', 'B', '', '', '', 4, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
     (7, 1, '角色管理', 'system:role', 'M', '/system/role', 'system/role/index', 'role', 2, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
-    (8, 7, '角色查询', 'system:role:list', 'B', '', '', '', 1, 1, 1, NULL, NOW(), NULL, NOW(), 'N');
+    (8, 7, '角色查询', 'system:role:list', 'B', '', '', '', 1, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+    (9, 1, '配置管理', 'system:config', 'M', '/system/config', 'system/config/index', 'config', 3, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+    (10, 9, '配置查询', 'system:config:list', 'B', '', '', '', 1, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+    (11, 9, '配置新增', 'system:config:add', 'B', '', '', '', 2, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+    (12, 9, '配置编辑', 'system:config:edit', 'B', '', '', '', 3, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+    (13, 9, '配置删除', 'system:config:remove', 'B', '', '', '', 4, 1, 1, NULL, NOW(), NULL, NOW(), 'N');
 
 -- 角色权限关联
 -- admin 拥有全部权限
@@ -163,6 +187,12 @@ VALUES
     (6, 1, 6, NULL, NOW(), NULL, NOW(), 'N'),
     (7, 1, 7, NULL, NOW(), NULL, NOW(), 'N'),
     (8, 1, 8, NULL, NOW(), NULL, NOW(), 'N'),
+-- admin 拥有配置管理权限
+    (15, 1, 9, NULL, NOW(), NULL, NOW(), 'N'),
+    (16, 1, 10, NULL, NOW(), NULL, NOW(), 'N'),
+    (17, 1, 11, NULL, NOW(), NULL, NOW(), 'N'),
+    (18, 1, 12, NULL, NOW(), NULL, NOW(), 'N'),
+    (19, 1, 13, NULL, NOW(), NULL, NOW(), 'N'),
 -- dev 只有用户查询权限
     (9, 2, 1, NULL, NOW(), NULL, NOW(), 'N'),
     (10, 2, 2, NULL, NOW(), NULL, NOW(), 'N'),
@@ -171,3 +201,10 @@ VALUES
     (12, 3, 1, NULL, NOW(), NULL, NOW(), 'N'),
     (13, 3, 7, NULL, NOW(), NULL, NOW(), 'N'),
     (14, 3, 8, NULL, NOW(), NULL, NOW(), 'N');
+
+-- 系统配置
+INSERT INTO sys_config (id, config_name, config_key, config_value, config_type, remark, create_by, create_time, update_by, update_time, is_deleted)
+VALUES
+    (1, '用户初始密码', 'sys.user.initPassword', '123456', 0, '新建用户时的默认登录密码', NULL, NOW(), NULL, NOW(), 'N'),
+    (2, '账号自助注册', 'sys.account.registerEnabled', 'false', 0, '是否开启账号自助注册', NULL, NOW(), NULL, NOW(), 'N'),
+    (3, '登录验证码开关', 'sys.account.captchaEnabled', 'true', 1, '登录时是否校验图形验证码', NULL, NOW(), NULL, NOW(), 'N');
