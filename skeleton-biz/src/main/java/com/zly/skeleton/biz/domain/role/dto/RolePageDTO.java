@@ -13,5 +13,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class RolePageDTO extends PageRequest
 {
-
+    private Integer status;
 }

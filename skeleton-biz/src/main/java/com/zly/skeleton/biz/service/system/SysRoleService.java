@@ -1,6 +1,9 @@
 package com.zly.skeleton.biz.service.system;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zly.skeleton.biz.domain.role.dto.CreateRoleDTO;
+import com.zly.skeleton.biz.domain.role.dto.EditPermissionDTO;
+import com.zly.skeleton.biz.domain.role.dto.EditRoleDTO;
 import com.zly.skeleton.biz.domain.role.dto.RolePageDTO;
 import com.zly.skeleton.biz.domain.role.vo.RoleListItemVO;
 import com.zly.skeleton.biz.domain.role.vo.RolePageItemVO;
@@ -18,12 +21,20 @@ import java.util.List;
  */
 public interface SysRoleService extends IService<SysRole>
 {
-
     List<SysRole> getUserRoleList(Long userId);
 
     Result<List<RoleListItemVO>> getAllRoleList();
 
     Result<PageResponse<RolePageItemVO>> getRolePage(@Valid RolePageDTO dto);
 
+    void create(@Valid CreateRoleDTO dto);
+
+    void postponeSort(Integer currentSort);
+
+    void postponeSort(Integer currentSort, Integer maxSort);
+
+    void edit(EditRoleDTO dto);
+
+    void assignMenu(@Valid EditPermissionDTO dto);
 }
     

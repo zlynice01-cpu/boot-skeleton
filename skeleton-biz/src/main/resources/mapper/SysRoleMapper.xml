@@ -10,4 +10,9 @@
         where r.is_deleted = 'N' and ur.user_id = #{userId}
     </select>
 
+    <update id="postponeSort">
+        update sys_role set sort = sort + 1
+        where sort >= #{currentSort} and sort &lt; #{maxSort}
+    </update>
+
 </mapper>

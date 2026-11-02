@@ -1,10 +1,12 @@
 package com.zly.skeleton.core.controller.system;
 
+import com.zly.skeleton.biz.domain.promission.dto.MenusTreeDTO;
 import com.zly.skeleton.biz.domain.promission.vo.MenusVO;
 import com.zly.skeleton.biz.service.system.SysPermissionService;
 import com.zly.skeleton.common.web.entity.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,8 +26,8 @@ public class SysPermissionController
     private final SysPermissionService permissionService;
 
     @GetMapping("/tree")
-    public Result<List<MenusVO>> tree() {
-        return permissionService.getPermissionTree();
+    public Result<List<MenusVO>> tree(MenusTreeDTO dto) {
+        return permissionService.getPermissionTree(dto);
     }
 
 }

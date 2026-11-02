@@ -24,4 +24,10 @@ public class SysRolePermission extends BaseEntity
 
     private Long permissionId;
 
+    public SysRolePermission(Long roleId, Long permissionId) {
+        this.roleId = roleId;
+        this.permissionId = permissionId;
+    }
+
+
 }

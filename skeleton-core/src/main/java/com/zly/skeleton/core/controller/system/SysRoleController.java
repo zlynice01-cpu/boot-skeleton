@@ -1,7 +1,6 @@
 package com.zly.skeleton.core.controller.system;
 
-import com.zly.skeleton.biz.domain.role.dto.RoleListDTO;
-import com.zly.skeleton.biz.domain.role.dto.RolePageDTO;
+import com.zly.skeleton.biz.domain.role.dto.*;
 import com.zly.skeleton.biz.domain.role.vo.RoleListItemVO;
 import com.zly.skeleton.biz.domain.role.vo.RolePageItemVO;
 import com.zly.skeleton.biz.service.system.SysRoleService;
@@ -33,6 +32,24 @@ public class SysRoleController
     @PostMapping("/page")
     public Result<PageResponse<RolePageItemVO>> page(@Valid @RequestBody RolePageDTO dto) {
         return roleService.getRolePage(dto);
+    }
+
+    @PostMapping("/create")
+    public Result<Void> create(@Valid @RequestBody CreateRoleDTO dto) {
+        roleService.create(dto);
+        return Result.success();
+    }
+
+    @PostMapping("/edit")
+    public Result<Void> edit(@Valid @RequestBody EditRoleDTO dto) {
+        roleService.edit(dto);
+        return Result.success();
+    }
+
+    @PostMapping("/assignMenu")
+    public Result<Void> assignMenu(@Valid @RequestBody EditPermissionDTO dto) {
+        roleService.assignMenu(dto);
+        return Result.success();
     }
 
 }

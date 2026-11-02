@@ -16,5 +16,7 @@ public interface SysRoleMapper extends BaseMapper<SysRole>
 
     List<SysRole> selectRoleListByUserId(@Param("userId") Long userId);
 
+    void postponeSort(@Param("currentSort") Integer currentSort, @Param("maxSort") Integer maxSort);
+
 }
     

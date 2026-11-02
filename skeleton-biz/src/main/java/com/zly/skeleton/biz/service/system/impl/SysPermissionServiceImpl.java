@@ -2,6 +2,7 @@ package com.zly.skeleton.biz.service.system.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zly.skeleton.biz.domain.promission.dto.MenusTreeDTO;
 import com.zly.skeleton.biz.domain.promission.vo.MenusVO;
 import com.zly.skeleton.biz.mapper.SysPermissionMapper;
 import com.zly.skeleton.biz.service.system.SysPermissionService;
@@ -43,10 +44,18 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
     }
 
     @Override
-    public Result<List<MenusVO>> getPermissionTree()
+    public Result<List<MenusVO>> getPermissionTree(MenusTreeDTO dto)
     {
-        List<SysPermission> list = list();
-        List<MenusVO> voList = list.stream().filter(Objects::nonNull)
+        Long roleId = dto.getRoleId();
+        List<SysPermission> menuList = null;
+        if (roleId == null)
+        {
+            menuList = list();
+        } else {
+            menuList = permissionMapper.selectPermissionsByRoleIds(List.of(roleId));
+        }
+
+        List<MenusVO> voList = menuList.stream().filter(Objects::nonNull)
                 .map(item -> {
                     MenusVO menusVO = new MenusVO();
                     BeanUtils.copyProperties(item, menusVO);
