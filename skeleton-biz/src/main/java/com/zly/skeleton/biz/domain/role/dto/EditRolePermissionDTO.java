@@ -10,7 +10,7 @@ import java.util.List;
  * @since 2026/11/2 16:04
  */
 @Data
-public class EditPermissionDTO
+public class EditRolePermissionDTO
 {
 
     private Long roleId;

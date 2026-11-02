@@ -14,8 +14,8 @@ import java.util.List;
  */
 public interface SysPermissionMapper extends BaseMapper<SysPermission>
 {
-
     List<SysPermission> selectPermissionsByRoleIds(@Param("roleIdSet") Collection<Long> roleIdSet);
 
+    void postponeSort(@Param("currentSort") Integer currentSort, @Param("maxSort") Integer maxSort, @Param("id") Long id);
 }
     

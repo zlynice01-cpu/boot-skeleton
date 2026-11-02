@@ -12,4 +12,12 @@
         </foreach>
     </select>
 
+    <update id="postponeSort">
+        update sys_permission set sort = sort + 1
+        where sort >= #{currentSort} and sort &lt; #{maxSort}
+        <if test="id != null">
+            and id != #{id}
+        </if>
+    </update>
+
 </mapper>

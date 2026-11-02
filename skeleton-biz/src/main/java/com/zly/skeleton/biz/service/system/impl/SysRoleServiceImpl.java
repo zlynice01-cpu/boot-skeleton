@@ -1,13 +1,12 @@
 package com.zly.skeleton.biz.service.system.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zly.skeleton.biz.domain.role.dto.CreateRoleDTO;
-import com.zly.skeleton.biz.domain.role.dto.EditPermissionDTO;
+import com.zly.skeleton.biz.domain.role.dto.EditRolePermissionDTO;
 import com.zly.skeleton.biz.domain.role.dto.EditRoleDTO;
 import com.zly.skeleton.biz.domain.role.dto.RolePageDTO;
 import com.zly.skeleton.biz.domain.role.vo.RoleListItemVO;
@@ -94,11 +93,17 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
     @Override
     public void postponeSort(Integer currentSort)
     {
-        postponeSort(currentSort, 9999);
+        postponeSort(currentSort, null);
     }
 
     @Override
-    public void postponeSort(Integer currentSort, Integer maxSort)
+    public void postponeSort(Integer currentSort, Long id)
+    {
+        postponeSort(currentSort, 9999, id);
+    }
+
+    @Override
+    public void postponeSort(Integer currentSort, Integer maxSort, Long id)
     {
         LambdaQueryWrapper<SysRole> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SysRole::getSort, currentSort)
@@ -108,21 +113,21 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         {
             return;
         }
-        roleMapper.postponeSort(currentSort, maxSort);
+        roleMapper.postponeSort(currentSort, maxSort, id);
     }
 
     @Override
     public void edit(EditRoleDTO dto)
     {
         Integer sort = dto.getSort();
-        postponeSort(sort);
+        postponeSort(sort, dto.getId());
         SysRole role = new SysRole();
         BeanUtils.copyProperties(dto, role);
         updateById(role);
     }
 
     @Override
-    public void assignMenu(EditPermissionDTO dto)
+    public void assignMenu(EditRolePermissionDTO dto)
     {
         Long roleId = dto.getRoleId();
         if (roleId == null)

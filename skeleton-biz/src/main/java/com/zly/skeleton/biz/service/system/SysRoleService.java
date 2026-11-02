@@ -2,7 +2,7 @@ package com.zly.skeleton.biz.service.system;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zly.skeleton.biz.domain.role.dto.CreateRoleDTO;
-import com.zly.skeleton.biz.domain.role.dto.EditPermissionDTO;
+import com.zly.skeleton.biz.domain.role.dto.EditRolePermissionDTO;
 import com.zly.skeleton.biz.domain.role.dto.EditRoleDTO;
 import com.zly.skeleton.biz.domain.role.dto.RolePageDTO;
 import com.zly.skeleton.biz.domain.role.vo.RoleListItemVO;
@@ -31,10 +31,12 @@ public interface SysRoleService extends IService<SysRole>
 
     void postponeSort(Integer currentSort);
 
-    void postponeSort(Integer currentSort, Integer maxSort);
+    void postponeSort(Integer currentSort, Long id);
+
+    void postponeSort(Integer currentSort, Integer maxSort, Long id);
 
     void edit(EditRoleDTO dto);
 
-    void assignMenu(@Valid EditPermissionDTO dto);
+    void assignMenu(@Valid EditRolePermissionDTO dto);
 }
     

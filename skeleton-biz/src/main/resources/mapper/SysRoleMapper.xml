@@ -13,6 +13,9 @@
     <update id="postponeSort">
         update sys_role set sort = sort + 1
         where sort >= #{currentSort} and sort &lt; #{maxSort}
+        <if test="id != null">
+            and id != #{id}
+        </if>
     </update>
 
 </mapper>

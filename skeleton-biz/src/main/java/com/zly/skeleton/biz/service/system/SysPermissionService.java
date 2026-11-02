@@ -1,10 +1,13 @@
 package com.zly.skeleton.biz.service.system;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zly.skeleton.biz.domain.promission.dto.CreatePermissionDTO;
+import com.zly.skeleton.biz.domain.promission.dto.EditPermissionDTO;
 import com.zly.skeleton.biz.domain.promission.dto.MenusTreeDTO;
 import com.zly.skeleton.biz.domain.promission.vo.MenusVO;
 import com.zly.skeleton.common.web.entity.Result;
 import com.zly.skeleton.mybatisplus.entity.SysPermission;
+import jakarta.validation.Valid;
 
 import java.util.Collection;
 import java.util.List;
@@ -16,10 +19,18 @@ import java.util.List;
  */
 public interface SysPermissionService extends IService<SysPermission>
 {
-
     List<SysPermission> getPermissionsByRoleIds(Collection<Long> roleIdSet);
 
     Result<List<MenusVO>> getPermissionTree(MenusTreeDTO dto);
 
+    void create(@Valid CreatePermissionDTO dto);
+
+    void edit(@Valid EditPermissionDTO dto);
+
+    void postponeSort(Integer currentSort);
+
+    void postponeSort(Integer currentSort, Long id);
+
+    void postponeSort(Integer currentSort, Integer maxSort, Long id);
 }
     

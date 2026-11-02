@@ -47,7 +47,7 @@ public class SysRoleController
     }
 
     @PostMapping("/assignMenu")
-    public Result<Void> assignMenu(@Valid @RequestBody EditPermissionDTO dto) {
+    public Result<Void> assignMenu(@Valid @RequestBody EditRolePermissionDTO dto) {
         roleService.assignMenu(dto);
         return Result.success();
     }
