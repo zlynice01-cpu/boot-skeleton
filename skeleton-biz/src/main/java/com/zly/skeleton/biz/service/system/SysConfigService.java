@@ -27,4 +27,6 @@ public interface SysConfigService extends IService<SysConfig>
     void refreshCache();
 
     SysConfigDTO getConfigByCode(String code);
+
+    Long getConfigCount();
 }

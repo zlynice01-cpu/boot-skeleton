@@ -1,5 +1,6 @@
 package com.zly.skeleton.biz.service.system.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
@@ -200,5 +201,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 更新角色关联信息
         userRoleService.updateUserRole(userId, roleIds);
         return Result.success();
+    }
+
+    @Override
+    public Long getUserCount()
+    {
+        LambdaQueryWrapper<SysUser> queryWrapper = Wrappers.lambdaQuery(SysUser.class);
+        return count(queryWrapper);
     }
 }

@@ -26,5 +26,7 @@ public interface SysPermissionService extends IService<SysPermission>
     void create(@Valid CreatePermissionDTO dto);
 
     void edit(@Valid EditPermissionDTO dto);
+
+    Long getMenuCount();
 }
     

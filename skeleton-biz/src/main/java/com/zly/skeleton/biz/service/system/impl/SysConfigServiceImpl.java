@@ -134,6 +134,13 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
         return dto;
     }
 
+    @Override
+    public Long getConfigCount()
+    {
+        LambdaQueryWrapper<SysConfig> lambdaQuery = Wrappers.lambdaQuery(SysConfig.class);
+        return count(lambdaQuery);
+    }
+
     /**
      * 按参数键名查询配置，未找到返回 null
      */

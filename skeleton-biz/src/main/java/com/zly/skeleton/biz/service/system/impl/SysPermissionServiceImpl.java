@@ -1,5 +1,6 @@
 package com.zly.skeleton.biz.service.system.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -82,5 +83,12 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
         SysPermission permission = new SysPermission();
         BeanUtils.copyProperties(dto, permission);
         updateById(permission);
+    }
+
+    @Override
+    public Long getMenuCount()
+    {
+        LambdaQueryWrapper<SysPermission> queryWrapper = Wrappers.lambdaQuery(SysPermission.class);
+        return count(queryWrapper);
     }
 }

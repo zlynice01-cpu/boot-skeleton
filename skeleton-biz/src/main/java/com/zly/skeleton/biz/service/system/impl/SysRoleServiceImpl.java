@@ -24,8 +24,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -136,20 +139,56 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRole> impl
         }
         List<SysRolePermission> rolePermissionList = rolePermissionMapper
                 .selectList(Wrappers.lambdaQuery(SysRolePermission.class).eq(SysRolePermission::getRoleId, roleId));
-        if (ObjectUtils.isNotEmpty(rolePermissionList))
-        {
-            rolePermissionMapper.delete(Wrappers.lambdaQuery(SysRolePermission.class).eq(SysRolePermission::getRoleId, roleId));
-        }
-        List<Long> permissionIds = dto.getPermissionIds();
-        if (ObjectUtils.isEmpty(permissionIds))
-        {
+
+        // 数据库存储权限id
+        Set<Long> dbPermIds = rolePermissionList.stream().filter(Objects::nonNull)
+                .map(SysRolePermission::getPermissionId)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        // 需要修改的权限id
+        Set<Long> permIds = dto.getPermissionIds().stream().filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        if (ObjectUtils.isEmpty(dbPermIds) && ObjectUtils.isEmpty(permIds)) {
             return;
         }
-        for (Long permissionId : permissionIds)
-        {
-            SysRolePermission rolePermission = new SysRolePermission(roleId, permissionId);
-            rolePermissionMapper.insert(rolePermission);
+
+        Set<Long> addPermIds = new HashSet<>();
+        Set<Long> removePermIds = new HashSet<>();
+
+        if (ObjectUtils.isEmpty(dbPermIds)) {
+            addPermIds = permIds;
+        } else {
+            addPermIds = permIds.stream().filter(item -> !dbPermIds.contains(item)).collect(Collectors.toSet());
         }
+
+        if (ObjectUtils.isEmpty(permIds)) {
+            removePermIds = dbPermIds;
+        } else {
+            removePermIds = dbPermIds.stream().filter(item -> !permIds.contains(item)).collect(Collectors.toSet());
+        }
+
+        if (ObjectUtils.isNotEmpty(removePermIds))
+        {
+            rolePermissionMapper.delete(Wrappers.lambdaQuery(SysRolePermission.class)
+                    .eq(SysRolePermission::getRoleId, roleId)
+                    .in(SysRolePermission::getPermissionId, removePermIds));
+        }
+        if (ObjectUtils.isNotEmpty(addPermIds)) {
+            for (Long permissionId : addPermIds)
+            {
+                SysRolePermission rolePermission = new SysRolePermission(roleId, permissionId);
+                rolePermissionMapper.insert(rolePermission);
+            }
+        }
+    }
+
+    @Override
+    public Long getRoleCount()
+    {
+        LambdaQueryWrapper<SysRole> queryWrapper = Wrappers.lambdaQuery(SysRole.class);
+        return count(queryWrapper);
     }
 
 }

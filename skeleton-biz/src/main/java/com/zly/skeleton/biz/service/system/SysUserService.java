@@ -34,5 +34,6 @@ public interface SysUserService extends IService<SysUser>
 
     Result<Void> edit(@Valid EditUserProfileDTO dto);
 
+    Long getUserCount();
 }
     

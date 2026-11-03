@@ -38,5 +38,7 @@ public interface SysRoleService extends IService<SysRole>
     void edit(EditRoleDTO dto);
 
     void assignMenu(@Valid EditRolePermissionDTO dto);
+
+    Long getRoleCount();
 }
     
