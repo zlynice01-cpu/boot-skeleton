@@ -20,7 +20,7 @@ public class DashboardServiceImpl implements DashboardService
     private final SysConfigService configService;
 
     @Override
-    public DashboardInfoVO getDashboard()
+    public DashboardInfoVO summary()
     {
         Long userCount = userService.getUserCount();
         Long roleCount = roleService.getRoleCount();

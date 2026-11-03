@@ -20,10 +20,9 @@ public class DashboardController
 {
     private final DashboardService dashboardService;
 
-    @GetMapping("/getDashboard")
-    public Result<DashboardInfoVO> getDashboard() {
-        DashboardInfoVO vo = dashboardService.getDashboard();
+    @GetMapping("/summary")
+    public Result<DashboardInfoVO> summary() {
+        DashboardInfoVO vo = dashboardService.summary();
         return Result.success(vo);
     }
-
 }

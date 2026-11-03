@@ -9,6 +9,6 @@ import com.zly.skeleton.biz.domain.dashboard.vo.DashboardInfoVO;
  */
 public interface DashboardService
 {
-    DashboardInfoVO getDashboard();
+    DashboardInfoVO summary();
 }
     
