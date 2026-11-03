@@ -45,11 +45,15 @@ public class CreateUserDTO
     @NotNull(message = "缺少部门信息")
     private Long deptId;
 
-    public void encryptPassword()
+    public void encryptPassword(String defPassword)
     {
-        if (StringUtils.isBlank(this.password))
+        if (StringUtils.isBlank(this.password) && StringUtils.isBlank(defPassword))
         {
             this.password = "123456";
+        }
+        if (StringUtils.isBlank(this.password))
+        {
+            this.password = defPassword;
         }
         MyBCryptPasswordEncoder encoder = new MyBCryptPasswordEncoder();
         this.password = encoder.encode(this.password);
@@ -72,9 +76,9 @@ public class CreateUserDTO
         this.avatar = "default_avatar.jpg";
     }
 
-    public void initAndCheck()
+    public void initAndCheck(String defPassword)
     {
-        encryptPassword();
+        encryptPassword(defPassword);
         checkAvatar();
         checkStatus();
     }

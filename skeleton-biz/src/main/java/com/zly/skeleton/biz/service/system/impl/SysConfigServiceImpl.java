@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zly.skeleton.biz.domain.config.dto.ConfigPageDTO;
 import com.zly.skeleton.biz.domain.config.dto.SaveConfigDTO;
+import com.zly.skeleton.biz.domain.config.dto.SysConfigDTO;
 import com.zly.skeleton.biz.domain.config.vo.ConfigPageItemVO;
 import com.zly.skeleton.biz.mapper.SysConfigMapper;
 import com.zly.skeleton.biz.service.system.SysConfigService;
@@ -119,6 +120,18 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
         {
             redisCache.setCacheObject(CACHE_KEY_PREFIX + config.getConfigKey(), config.getConfigValue());
         }
+    }
+
+    @Override
+    public SysConfigDTO getConfigByCode(String code)
+    {
+        LambdaQueryWrapper<SysConfig> queryWrapper = Wrappers
+                .lambdaQuery(SysConfig.class)
+                .eq(SysConfig::getConfigKey, code);
+        SysConfig sysConfig = getOne(queryWrapper);
+        SysConfigDTO dto = new SysConfigDTO();
+        BeanUtils.copyProperties(sysConfig, dto);
+        return dto;
     }
 
     /**
