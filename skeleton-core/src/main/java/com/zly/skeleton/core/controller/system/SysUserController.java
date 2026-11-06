@@ -3,6 +3,7 @@ package com.zly.skeleton.core.controller.system;
 import com.zly.skeleton.biz.domain.dept.dto.CheckDeptDTO;
 import com.zly.skeleton.biz.domain.user.dto.*;
 import com.zly.skeleton.biz.domain.user.vo.LoginUserVO;
+import com.zly.skeleton.biz.domain.user.vo.RecentlyUserItemVO;
 import com.zly.skeleton.biz.domain.user.vo.UserPageItemVO;
 import com.zly.skeleton.biz.domain.user.vo.UserProfileVO;
 import com.zly.skeleton.biz.service.system.SysDeptService;
@@ -13,6 +14,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import com.zly.skeleton.mybatisplus.entity.PageResponse;
+
+import java.util.List;
 
 /**
  *
@@ -60,6 +63,11 @@ public class SysUserController
     // @PreAuthorize("hasAuthority('system:user:list')")
     public Result<PageResponse<UserPageItemVO>> getPage(@Valid @RequestBody UserPageDTO dto) {
         return userService.getPage(dto);
+    }
+
+    @PostMapping("/recentlyUser")
+    public Result<List<RecentlyUserItemVO>> getRecentlyUserPage(@Valid @RequestBody RecentlyUserDTO dto) {
+        return userService.getRecentlyUserPage(dto);
     }
 
     @PostMapping("/edit")

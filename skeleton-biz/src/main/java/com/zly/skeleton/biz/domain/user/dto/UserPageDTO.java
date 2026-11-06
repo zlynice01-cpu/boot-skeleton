@@ -1,8 +1,12 @@
 package com.zly.skeleton.biz.domain.user.dto;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.zly.skeleton.mybatisplus.entity.PageRequest;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.time.LocalDateTime;
 
 /**
  *
@@ -27,5 +31,7 @@ public class UserPageDTO extends PageRequest
 
     // 状态
     private Integer status;
+
+    private LocalDateTime createTime;
 
 }

@@ -9,11 +9,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zly.skeleton.biz.domain.config.dto.SysConfigDTO;
 import com.zly.skeleton.biz.domain.dept.vo.DeptProfileVO;
 import com.zly.skeleton.biz.domain.role.vo.RoleProfileVO;
-import com.zly.skeleton.biz.domain.user.dto.CreateUserDTO;
-import com.zly.skeleton.biz.domain.user.dto.EditUserProfileDTO;
-import com.zly.skeleton.biz.domain.user.dto.UserPageDTO;
-import com.zly.skeleton.biz.domain.user.dto.UserProfileDTO;
+import com.zly.skeleton.biz.domain.user.dto.*;
 import com.zly.skeleton.biz.domain.user.vo.LoginUserVO;
+import com.zly.skeleton.biz.domain.user.vo.RecentlyUserItemVO;
 import com.zly.skeleton.biz.domain.user.vo.UserPageItemVO;
 import com.zly.skeleton.biz.domain.user.vo.UserProfileVO;
 import com.zly.skeleton.biz.mapper.SysDeptMapper;
@@ -32,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -208,5 +207,26 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     {
         LambdaQueryWrapper<SysUser> queryWrapper = Wrappers.lambdaQuery(SysUser.class);
         return count(queryWrapper);
+    }
+
+    @Override
+    public Result<List<RecentlyUserItemVO>> getRecentlyUserPage(RecentlyUserDTO dto)
+    {
+        UserPageDTO pageDTO = new UserPageDTO();
+        BeanUtils.copyProperties(dto, pageDTO);
+        pageDTO.setPageSize(50L);
+
+        Result<PageResponse<UserPageItemVO>> page = this.getPage(pageDTO);
+        PageResponse<UserPageItemVO> data = page.getData();
+        List<UserPageItemVO> result = data.getResult();
+        if (ObjectUtils.isNotEmpty(result)) {
+            List<RecentlyUserItemVO> collect = result.stream().map(item -> {
+                RecentlyUserItemVO vo = new RecentlyUserItemVO();
+                BeanUtils.copyProperties(item, vo);
+                return vo;
+            }).collect(Collectors.toList());
+            return Result.success(collect);
+        }
+        return Result.success(List.of());
     }
 }

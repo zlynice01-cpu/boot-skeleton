@@ -23,6 +23,9 @@
             <if test="dto.status != null">
                 and u.status = #{dto.status}
             </if>
+            <if test="dto.createTime != null">
+                and u.create_time >= #{dto.createTime}
+            </if>
         </where>
     </select>
 
