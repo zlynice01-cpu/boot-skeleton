@@ -1,7 +1,6 @@
 package com.zly.skeleton.biz.domain.role.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.zly.skeleton.biz.domain.role.dto.RolePageDTO;
 import com.zly.skeleton.mybatisplus.entity.SysRole;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
@@ -31,7 +30,7 @@ public class RolePageItemVO
     // 状态 0禁用 1正常
     private Integer status;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 

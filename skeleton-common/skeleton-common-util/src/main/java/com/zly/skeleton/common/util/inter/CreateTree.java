@@ -16,6 +16,4 @@ public interface CreateTree<T extends CreateTree<T>>
     void setChildren(List<T> childrenTree);
 
     List<T> getChildren();
-
 }
-    
