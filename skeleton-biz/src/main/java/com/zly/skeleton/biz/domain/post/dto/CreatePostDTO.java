@@ -21,8 +21,8 @@ public class CreatePostDTO
     // 排序
     private Integer sort;
 
-    // 状态 0正常 1停用
-    private String status;
+    // 状态 0禁用 1启用
+    private Integer status;
 
     // 备注
     private String remark;

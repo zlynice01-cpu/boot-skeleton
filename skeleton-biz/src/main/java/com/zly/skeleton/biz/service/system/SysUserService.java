@@ -37,5 +37,7 @@ public interface SysUserService extends IService<SysUser>
     Long getUserCount();
 
     Result<List<RecentlyUserItemVO>> getRecentlyUserPage(@Valid RecentlyUserDTO dto);
+
+    Result<Integer> enable(@Valid EnableUserDTO dto);
 }
     

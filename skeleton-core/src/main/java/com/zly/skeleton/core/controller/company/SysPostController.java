@@ -1,4 +1,4 @@
-package com.zly.skeleton.core.controller.system;
+package com.zly.skeleton.core.controller.company;
 
 import com.zly.skeleton.biz.domain.post.dto.CreatePostDTO;
 import com.zly.skeleton.biz.domain.post.dto.DeletePostDTO;
@@ -47,9 +47,8 @@ public class SysPostController
     }
 
     @PostMapping("/status")
-    public Result<Void> updateStatus(@Valid @RequestBody EditPostStatusDTO dto) {
-        postService.updateStatus(dto);
-        return Result.success();
+    public Result<Integer> updateStatus(@Valid @RequestBody EditPostStatusDTO dto) {
+        return postService.enable(dto);
     }
 
     @PostMapping("/delete")

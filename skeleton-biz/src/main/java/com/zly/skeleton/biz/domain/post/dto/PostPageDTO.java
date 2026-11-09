@@ -20,7 +20,7 @@ public class PostPageDTO extends PageRequest
     // 岗位名称
     private String postName;
 
-    // 状态 0正常 1停用
-    private String status;
+    // 状态 0禁用 1启用
+    private Integer status;
 
 }

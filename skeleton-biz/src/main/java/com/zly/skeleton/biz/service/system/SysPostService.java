@@ -9,6 +9,7 @@ import com.zly.skeleton.biz.domain.post.vo.PostPageItemVO;
 import com.zly.skeleton.common.web.entity.Result;
 import com.zly.skeleton.mybatisplus.entity.PageResponse;
 import com.zly.skeleton.mybatisplus.entity.SysPost;
+import jakarta.validation.Valid;
 
 /**
  * 岗位服务
@@ -24,8 +25,7 @@ public interface SysPostService extends IService<SysPost>
 
     void edit(EditPostDTO dto);
 
-    void updateStatus(EditPostStatusDTO dto);
-
     void removePost(Long id);
 
+    Result<Integer> enable(EditPostStatusDTO dto);
 }

@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class DeptListDTO
 {
-    // 状态 0正常 1停用，为空时查询全部
-    private String status;
+    // 状态 0禁用 1启用，为空时查询全部
+    private Integer status;
 
 }

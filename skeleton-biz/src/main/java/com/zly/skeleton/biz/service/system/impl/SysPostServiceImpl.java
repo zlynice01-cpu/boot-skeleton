@@ -10,6 +10,7 @@ import com.zly.skeleton.biz.domain.post.dto.EditPostDTO;
 import com.zly.skeleton.biz.domain.post.dto.EditPostStatusDTO;
 import com.zly.skeleton.biz.domain.post.dto.PostPageDTO;
 import com.zly.skeleton.biz.domain.post.vo.PostPageItemVO;
+import com.zly.skeleton.biz.enums.StatusEnum;
 import com.zly.skeleton.biz.mapper.SysPostMapper;
 import com.zly.skeleton.biz.service.system.SysPostService;
 import com.zly.skeleton.common.web.entity.Result;
@@ -35,9 +36,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class SysPostServiceImpl extends ServiceImpl<SysPostMapper, SysPost> implements SysPostService
 {
-    // 状态 0正常 1停用
-    private static final String STATUS_NORMAL = "0";
-
     private final SysPostMapper postMapper;
 
     @Override
@@ -45,14 +43,14 @@ public class SysPostServiceImpl extends ServiceImpl<SysPostMapper, SysPost> impl
     {
         String postCode = dto.getPostCode();
         String postName = dto.getPostName();
-        String status = dto.getStatus();
+        Integer status = dto.getStatus();
 
         IPage<SysPost> page = PageUtil.createPage(dto);
         IPage<PostPageItemVO> voPage = postMapper
                 .selectPage(page, Wrappers.lambdaQuery(SysPost.class)
                         .like(StringUtils.isNotBlank(postCode), SysPost::getPostCode, postCode)
                         .like(StringUtils.isNotBlank(postName), SysPost::getPostName, postName)
-                        .eq(StringUtils.isNotBlank(status), SysPost::getStatus, status)
+                        .eq(status != null, SysPost::getStatus, status)
                         .orderByAsc(SysPost::getSort)
                         .orderByAsc(SysPost::getId))
                 .convert(PostPageItemVO::entityToVO);
@@ -69,9 +67,9 @@ public class SysPostServiceImpl extends ServiceImpl<SysPostMapper, SysPost> impl
 
         SysPost post = new SysPost();
         BeanUtils.copyProperties(dto, post);
-        if (StringUtils.isBlank(post.getStatus()))
+        if (post.getStatus() == null)
         {
-            post.setStatus(STATUS_NORMAL);
+            post.setStatus(StatusEnum.YES.getCode());
         }
         if (post.getSort() == null)
         {
@@ -92,20 +90,22 @@ public class SysPostServiceImpl extends ServiceImpl<SysPostMapper, SysPost> impl
     }
 
     @Override
-    public void updateStatus(EditPostStatusDTO dto)
-    {
-        checkPostExists(dto.getId());
-
-        postMapper.update(null, Wrappers.lambdaUpdate(SysPost.class)
-                .set(SysPost::getStatus, dto.getStatus())
-                .eq(SysPost::getId, dto.getId()));
-    }
-
-    @Override
     public void removePost(Long id)
     {
         checkPostExists(id);
         removeById(id);
+    }
+
+    @Override
+    public Result<Integer> enable(EditPostStatusDTO dto)
+    {
+        SysPost post = checkPostExists(dto.getId());
+        Integer status = post.getStatus();
+        boolean enable = StatusEnum.YES.getCode().equals(status);
+        Integer nextStatus = enable ? StatusEnum.NO.getCode() : StatusEnum.YES.getCode();
+        post.setStatus(nextStatus);
+        updateById(post);
+        return Result.success(nextStatus, enable ? "禁用成功" : "启用成功");
     }
 
     private SysPost checkPostExists(Long id)

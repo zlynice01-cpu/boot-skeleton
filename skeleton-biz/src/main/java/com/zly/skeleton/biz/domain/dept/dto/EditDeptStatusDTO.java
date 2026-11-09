@@ -1,6 +1,5 @@
 package com.zly.skeleton.biz.domain.dept.dto;
 
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -16,7 +15,7 @@ public class EditDeptStatusDTO
     @NotNull(message = "缺少部门id")
     private Long id;
 
-    @NotEmpty(message = "缺少部门状态")
-    private String status;
+    @NotNull(message = "缺少部门状态")
+    private Integer status;
 
 }

@@ -81,5 +81,8 @@ public class SysUserController
         return Result.success();
     }
 
-
+    @PostMapping("/enable")
+    public Result<Integer> enable(@Valid @RequestBody EnableUserDTO dto) {
+        return userService.enable(dto);
+    }
 }

@@ -1,4 +1,4 @@
-package com.zly.skeleton.core.controller.system;
+package com.zly.skeleton.core.controller.company;
 
 import com.zly.skeleton.biz.domain.dept.dto.CreateDeptDTO;
 import com.zly.skeleton.biz.domain.dept.dto.DeleteDeptDTO;
@@ -53,6 +53,11 @@ public class SysDeptController
     public Result<Void> delete(@Valid @RequestBody DeleteDeptDTO dto) {
         deptService.removeDept(dto.getId());
         return Result.success();
+    }
+
+    @GetMapping("/enable")
+    public Result<Integer> enable(Long id) {
+        return deptService.enableDept(id);
     }
 
 }

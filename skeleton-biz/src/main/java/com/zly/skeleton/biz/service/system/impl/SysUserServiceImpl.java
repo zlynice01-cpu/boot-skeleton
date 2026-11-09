@@ -11,6 +11,7 @@ import com.zly.skeleton.biz.domain.dept.vo.DeptProfileVO;
 import com.zly.skeleton.biz.domain.role.vo.RoleProfileVO;
 import com.zly.skeleton.biz.domain.user.dto.CreateUserDTO;
 import com.zly.skeleton.biz.domain.user.dto.EditUserProfileDTO;
+import com.zly.skeleton.biz.domain.user.dto.EnableUserDTO;
 import com.zly.skeleton.biz.domain.user.dto.RecentlyUserDTO;
 import com.zly.skeleton.biz.domain.user.dto.UserPageDTO;
 import com.zly.skeleton.biz.domain.user.dto.UserProfileDTO;
@@ -18,6 +19,7 @@ import com.zly.skeleton.biz.domain.user.vo.LoginUserVO;
 import com.zly.skeleton.biz.domain.user.vo.RecentlyUserItemVO;
 import com.zly.skeleton.biz.domain.user.vo.UserPageItemVO;
 import com.zly.skeleton.biz.domain.user.vo.UserProfileVO;
+import com.zly.skeleton.biz.enums.StatusEnum;
 import com.zly.skeleton.biz.mapper.SysDeptMapper;
 import com.zly.skeleton.biz.mapper.SysPermissionMapper;
 import com.zly.skeleton.biz.mapper.SysRoleMapper;
@@ -242,5 +244,21 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
             return Result.success(collect);
         }
         return Result.success(List.of());
+    }
+
+    @Override
+    public Result<Integer> enable(EnableUserDTO dto)
+    {
+        SysUser user = getById(dto.getId());
+        if (user == null)
+        {
+            throw new BizException(BizErrorEnum.USER_NOT_FOUND);
+        }
+        Integer status = user.getStatus();
+        boolean enable = StatusEnum.YES.getCode().equals(status);
+        Integer nextStatus = enable ? StatusEnum.NO.getCode() : StatusEnum.YES.getCode();
+        user.setStatus(nextStatus);
+        updateById(user);
+        return Result.success(nextStatus, enable ? "禁用成功" : "启用成功");
     }
 }

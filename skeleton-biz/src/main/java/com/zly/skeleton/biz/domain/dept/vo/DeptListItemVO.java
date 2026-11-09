@@ -37,8 +37,8 @@ public class DeptListItemVO
     // 联系电话
     private String phone;
 
-    // 状态 0正常 1停用
-    private String status;
+    // 状态 0禁用 1启用
+    private Integer status;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

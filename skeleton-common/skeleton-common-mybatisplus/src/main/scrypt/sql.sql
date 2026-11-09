@@ -111,7 +111,7 @@ CREATE TABLE `sys_dept` (
                             `leader` varchar(50) DEFAULT NULL COMMENT '负责人姓名',
                             `leader_user_id` bigint DEFAULT NULL COMMENT '负责人用户ID',
                             `phone` varchar(20) DEFAULT NULL COMMENT '联系电话',
-                            `status` char(1) NOT NULL DEFAULT '0' COMMENT '状态 0正常 1停用',
+                            `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0禁用 1启用',
                             `create_by` bigint DEFAULT NULL COMMENT '创建人ID',
                             `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
                             `update_by` bigint DEFAULT NULL COMMENT '更新人ID',
@@ -189,7 +189,7 @@ CREATE TABLE `sys_post` (
                             `post_code` varchar(100) NOT NULL COMMENT '岗位编码，唯一（如：manager、staff）',
                             `post_name` varchar(100) NOT NULL COMMENT '岗位名称',
                             `sort` int DEFAULT 0 COMMENT '排序号',
-                            `status` char(1) NOT NULL DEFAULT '0' COMMENT '状态 0正常 1停用',
+                            `status` TINYINT NOT NULL DEFAULT 1 COMMENT '状态 0禁用 1启用',
                             `remark` varchar(500) DEFAULT NULL COMMENT '备注',
                             `create_by` bigint DEFAULT NULL COMMENT '创建人ID',
                             `create_time` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -217,9 +217,9 @@ CREATE TABLE `sys_user_post` (
 
 -- 插入部门
 INSERT INTO sys_dept (id, parent_id, dept_name, sort, status, create_by, create_time, update_by, update_time, is_deleted) VALUES
-                                                                                                                                   (1, 0, '总公司', 1, '0', NULL, NOW(), NULL, NOW(), 'N'),
-                                                                                                                                   (2, 1, '研发部', 2, '0', NULL, NOW(), NULL, NOW(), 'N'),
-                                                                                                                                   (3, 1, '财务部', 3, '0', NULL, NOW(), NULL, NOW(), 'N');
+                                                                                                                                   (1, 0, '总公司', 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+                                                                                                                                   (2, 1, '研发部', 2, 1, NULL, NOW(), NULL, NOW(), 'N'),
+                                                                                                                                   (3, 1, '财务部', 3, 1, NULL, NOW(), NULL, NOW(), 'N');
 
 -- 插入角色
 INSERT INTO sys_role (id, role_name, role_key, sort, status, data_scope, create_by, create_time, update_by, update_time, is_deleted) VALUES
@@ -241,7 +241,7 @@ INSERT INTO sys_user_role (id, user_id, role_id, create_by, create_time, update_
 
 -- 权限菜单
 INSERT INTO sys_permission (id, parent_id, permission_name, permission_key, permission_type, path, component, icon, sort, visible, status, create_by, create_time, update_by, update_time, is_deleted) VALUES
-                                                                                                                                                                                                           (1, 0, '系统管理', 'system', 'C', '/system', 'Layout', 'system', 1, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+                                                                                                                                                                                                           (1, 0, '系统管理', 'system', 'C', '/system', 'Layout', 'system', 3, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (2, 1, '用户管理', 'system:user', 'M', '/system/user', 'system/user/index', 'user', 1, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (3, 2, '用户查询', 'system:user:list', 'B', '', '', '', 1, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (4, 2, '用户新增', 'system:user:add', 'B', '', '', '', 2, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
@@ -259,16 +259,19 @@ INSERT INTO sys_permission (id, parent_id, permission_name, permission_key, perm
                                                                                                                                                                                                            (16, 14, '字典新增', 'system:dict:add', 'B', '', '', '', 2, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (17, 14, '字典编辑', 'system:dict:edit', 'B', '', '', '', 3, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (18, 14, '字典删除', 'system:dict:remove', 'B', '', '', '', 4, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
-                                                                                                                                                                                                           (19, 1, '部门管理', 'system:dept', 'M', '/system/dept', 'system/dept/index', 'dept', 5, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+                                                                                                                                                                                                           (19, 29, '部门管理', 'system:dept', 'M', '/system/dept', 'system/dept/index', 'dept', 1, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (20, 19, '部门查询', 'system:dept:list', 'B', '', '', '', 1, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (21, 19, '部门新增', 'system:dept:add', 'B', '', '', '', 2, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (22, 19, '部门编辑', 'system:dept:edit', 'B', '', '', '', 3, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (23, 19, '部门删除', 'system:dept:remove', 'B', '', '', '', 4, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
-                                                                                                                                                                                                           (24, 1, '岗位管理', 'system:post', 'M', '/system/post', 'system/post/index', 'post', 6, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+                                                                                                                                                                                                           (24, 29, '岗位管理', 'system:post', 'M', '/system/post', 'system/post/index', 'post', 2, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (25, 24, '岗位查询', 'system:post:list', 'B', '', '', '', 1, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (26, 24, '岗位新增', 'system:post:add', 'B', '', '', '', 2, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                                                                                                            (27, 24, '岗位编辑', 'system:post:edit', 'B', '', '', '', 3, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
-                                                                                                                                                                                                           (28, 24, '岗位删除', 'system:post:remove', 'B', '', '', '', 4, 1, 1, NULL, NOW(), NULL, NOW(), 'N');
+                                                                                                                                                                                                           (28, 24, '岗位删除', 'system:post:remove', 'B', '', '', '', 4, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+    (29, 0, '公司管理', 'company', 'C', '/company', '/company', 'company', 2, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+    (30, 0, '首页', 'dashboard', 'M', '/dashboard', '/dashboard/index', 'dashboard', 1, 1, 1, NULL, NOW(), NULL, NOW(), 'N'),
+    (31, 1, '菜单管理', 'system:menu', 'M', '/system/menu', 'system/menu/index', 'menu', 5, 1, 1, NULL, NOW(), NULL, NOW(), 'N');
 
 -- 角色权限关联
 INSERT INTO sys_role_permission (id, role_id, permission_id, create_by, create_time, update_by, update_time, is_deleted) VALUES
@@ -305,7 +308,10 @@ INSERT INTO sys_role_permission (id, role_id, permission_id, create_by, create_t
                                                                                                                              (11, 2, 3, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                              (12, 3, 1, NULL, NOW(), NULL, NOW(), 'N'),
                                                                                                                              (13, 3, 7, NULL, NOW(), NULL, NOW(), 'N'),
-                                                                                                                             (14, 3, 8, NULL, NOW(), NULL, NOW(), 'N');
+                                                                                                                             (14, 3, 8, NULL, NOW(), NULL, NOW(), 'N'),
+    (35, 1, 29, NULL, NOW(), NULL, NOW(), 'N'),
+    (36, 1, 30, NULL, NOW(), NULL, NOW(), 'N'),
+    (37, 1, 31, NULL, NOW(), NULL, NOW(), 'N');
 
 -- 系统配置
 INSERT INTO sys_config (id, config_name, config_key, config_value, config_type, remark, create_by, create_time, update_by, update_time, is_deleted) VALUES
@@ -324,11 +330,11 @@ INSERT INTO sys_dict_data(dict_type_id, dict_code, dict_label, dict_value, list_
 -- 初始化岗位数据
 INSERT INTO sys_post (id, post_code, post_name, sort, status, remark, create_by, create_time, update_by, update_time, is_deleted)
 VALUES
-    (1, 'ceo', '总经理', 1, '0', '总公司负责人', NULL, NOW(), NULL, NOW(), 'N'),
-    (2, 'dev_manager', '研发主管', 2, '0', '研发部负责人', NULL, NOW(), NULL, NOW(), 'N'),
-    (3, 'dev', '开发工程师', 3, '0', '研发人员', NULL, NOW(), NULL, NOW(), 'N'),
-    (4, 'finance_manager', '财务主管', 4, '0', '财务部负责人', NULL, NOW(), NULL, NOW(), 'N'),
-    (5, 'finance', '财务专员', 5, '0', '财务人员', NULL, NOW(), NULL, NOW(), 'N');
+    (1, 'ceo', '总经理', 1, 1, '总公司负责人', NULL, NOW(), NULL, NOW(), 'N'),
+    (2, 'dev_manager', '研发主管', 2, 1, '研发部负责人', NULL, NOW(), NULL, NOW(), 'N'),
+    (3, 'dev', '开发工程师', 3, 1, '研发人员', NULL, NOW(), NULL, NOW(), 'N'),
+    (4, 'finance_manager', '财务主管', 4, 1, '财务部负责人', NULL, NOW(), NULL, NOW(), 'N'),
+    (5, 'finance', '财务专员', 5, 1, '财务人员', NULL, NOW(), NULL, NOW(), 'N');
 
 -- 用户岗位关联示例
 INSERT INTO sys_user_post (user_id, post_id, create_by, create_time, is_deleted)

@@ -32,4 +32,7 @@ public interface SysDeptService extends IService<SysDept>
 
     void checkDeptId(CheckDeptDTO checkDept);
 
+    Result<Integer> enableDept(Long id);
+
+    void updateStatus(Long id, Integer status);
 }
