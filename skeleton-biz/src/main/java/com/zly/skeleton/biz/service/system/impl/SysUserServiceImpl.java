@@ -9,7 +9,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zly.skeleton.biz.domain.config.dto.SysConfigDTO;
 import com.zly.skeleton.biz.domain.dept.vo.DeptProfileVO;
 import com.zly.skeleton.biz.domain.role.vo.RoleProfileVO;
-import com.zly.skeleton.biz.domain.user.dto.*;
+import com.zly.skeleton.biz.domain.user.dto.CreateUserDTO;
+import com.zly.skeleton.biz.domain.user.dto.EditUserProfileDTO;
+import com.zly.skeleton.biz.domain.user.dto.RecentlyUserDTO;
+import com.zly.skeleton.biz.domain.user.dto.UserPageDTO;
+import com.zly.skeleton.biz.domain.user.dto.UserProfileDTO;
 import com.zly.skeleton.biz.domain.user.vo.LoginUserVO;
 import com.zly.skeleton.biz.domain.user.vo.RecentlyUserItemVO;
 import com.zly.skeleton.biz.domain.user.vo.UserPageItemVO;
@@ -24,14 +28,21 @@ import com.zly.skeleton.biz.service.system.SysUserService;
 import com.zly.skeleton.common.web.entity.Result;
 import com.zly.skeleton.common.web.enums.BizErrorEnum;
 import com.zly.skeleton.common.web.exception.BizException;
-import com.zly.skeleton.mybatisplus.entity.*;
+import com.zly.skeleton.mybatisplus.entity.PageResponse;
+import com.zly.skeleton.mybatisplus.entity.SysDept;
+import com.zly.skeleton.mybatisplus.entity.SysPermission;
+import com.zly.skeleton.mybatisplus.entity.SysRole;
+import com.zly.skeleton.mybatisplus.entity.SysUser;
+import com.zly.skeleton.mybatisplus.entity.SysUserRole;
 import com.zly.skeleton.mybatisplus.util.PageUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -197,8 +208,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         updateById(userEntity);
         Long userId = userEntity.getId();
         List<Long> roleIds = dto.getRoleIds();
-        // 更新角色关联信息
-        userRoleService.updateUserRole(userId, roleIds);
+        // 更新角色关联信息，roleIds 为 null 表示本次不修改角色（如仅切换状态）
+        if (roleIds != null)
+        {
+            userRoleService.updateUserRole(userId, roleIds);
+        }
         return Result.success();
     }
 

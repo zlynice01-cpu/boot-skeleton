@@ -29,6 +29,15 @@ public class SysDept extends BaseEntity
     // 排序
     private Integer sort;
 
+    // 负责人姓名
+    private String leader;
+
+    // 负责人用户ID
+    private Long leaderUserId;
+
+    // 联系电话
+    private String phone;
+
     // 状态 0禁用 1正常
     private Integer status;
 

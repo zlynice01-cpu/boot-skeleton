@@ -1,6 +1,5 @@
 package com.zly.skeleton.common.web.enums;
 
-import com.zly.skeleton.common.web.exception.BizException;
 import lombok.Getter;
 
 /**
@@ -22,6 +21,10 @@ public enum BizErrorEnum implements BaseError
     CONFIG_NOT_FOUND("未找到配置", 4001),
     CONFIG_KEY_EXIST("参数键名已存在", 4002),
     CONFIG_BUILT_IN_NOT_DELETE("系统内置参数不允许删除", 4003),
+
+    DICT_TYPE_NOT_FOUND("未找到字典类型", 4101),
+    DICT_CODE_EXIST("字典编码已存在", 4102),
+    DICT_DATA_NOT_FOUND("未找到字典数据", 4103),
 
     ;
 
