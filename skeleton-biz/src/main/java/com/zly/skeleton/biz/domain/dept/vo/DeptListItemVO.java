@@ -1,8 +1,12 @@
 package com.zly.skeleton.biz.domain.dept.vo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zly.skeleton.mybatisplus.entity.SysDept;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDateTime;
 
 /**
  *
@@ -24,8 +28,22 @@ public class DeptListItemVO
     // 排序
     private Integer sort;
 
-    // 状态 0禁用 1正常
-    private Integer status;
+    // 负责人姓名
+    private String leader;
+
+    // 负责人用户ID
+    private Long leaderUserId;
+
+    // 联系电话
+    private String phone;
+
+    // 状态 0正常 1停用
+    private String status;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
+
     public static DeptListItemVO entityToVO(SysDept sysDept)
     {
         if (sysDept == null)

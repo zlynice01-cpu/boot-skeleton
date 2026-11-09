@@ -12,6 +12,8 @@ public enum BizErrorEnum implements BaseError
 {
     DEPT_NOT_FOUND("未找到部门", 1001),
     DEPT_EXPIRE("部门失效", 1002),
+    DEPT_HAS_CHILDREN("存在下级部门，无法删除", 1003),
+    DEPT_PARENT_ERROR("上级部门不能是自身", 1004),
 
     ROLE_NOT_FOUND("未找到角色", 2001),
 
@@ -25,6 +27,9 @@ public enum BizErrorEnum implements BaseError
     DICT_TYPE_NOT_FOUND("未找到字典类型", 4101),
     DICT_CODE_EXIST("字典编码已存在", 4102),
     DICT_DATA_NOT_FOUND("未找到字典数据", 4103),
+
+    POST_NOT_FOUND("未找到岗位", 5001),
+    POST_CODE_EXIST("岗位编码已存在", 5002),
 
     ;
 
