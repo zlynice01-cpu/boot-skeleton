@@ -77,7 +77,7 @@ public class SecurityConfig
                         .sessionRegistry(sessionRegistry)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/doLogin", "/error", "/captcha/create").permitAll()
+                        .requestMatchers("/doLogin", "/error", "/captcha/create", "/test/**").permitAll()
                         .anyRequest().authenticated()
                 )
 //                .formLogin(formLogin -> formLogin

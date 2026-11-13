@@ -13,7 +13,7 @@ import java.util.Random;
  * @since 2026/10/23 15:55
  */
 @Data
-public class VerifyCodeUtil
+public class CaptchaCodeUtil
 {
 
     private final int width = 100;// 生成验证码图片的宽度

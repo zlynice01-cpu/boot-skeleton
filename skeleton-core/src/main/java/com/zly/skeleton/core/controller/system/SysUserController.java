@@ -9,6 +9,7 @@ import com.zly.skeleton.biz.domain.user.vo.UserProfileVO;
 import com.zly.skeleton.biz.service.system.SysDeptService;
 import com.zly.skeleton.biz.service.system.SysUserService;
 import com.zly.skeleton.common.security.util.UserContextUtil;
+import com.zly.skeleton.common.web.annotation.OperLog;
 import com.zly.skeleton.common.web.entity.Result;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -61,28 +62,34 @@ public class SysUserController
 
     @PostMapping("/page")
     // @PreAuthorize("hasAuthority('system:user:list')")
-    public Result<PageResponse<UserPageItemVO>> getPage(@Valid @RequestBody UserPageDTO dto) {
+    public Result<PageResponse<UserPageItemVO>> getPage(@Valid @RequestBody UserPageDTO dto)
+    {
         return userService.getPage(dto);
     }
 
     @PostMapping("/recentlyUser")
-    public Result<List<RecentlyUserItemVO>> getRecentlyUserPage(@Valid @RequestBody RecentlyUserDTO dto) {
+    public Result<List<RecentlyUserItemVO>> getRecentlyUserPage(@Valid @RequestBody RecentlyUserDTO dto)
+    {
         return userService.getRecentlyUserPage(dto);
     }
 
+    @OperLog(title = "用户管理", businessType = 1)
     @PostMapping("/edit")
-    public Result<Void> edit(@Valid @RequestBody EditUserProfileDTO dto) {
+    public Result<Void> edit(@Valid @RequestBody EditUserProfileDTO dto)
+    {
         return userService.edit(dto);
     }
 
     @PostMapping("/delete")
-    public Result<Void> delete(@Valid @RequestBody DeleteUserDTO dto) {
+    public Result<Void> delete(@Valid @RequestBody DeleteUserDTO dto)
+    {
         userService.removeById(dto.getId());
         return Result.success();
     }
 
     @PostMapping("/enable")
-    public Result<Integer> enable(@Valid @RequestBody EnableUserDTO dto) {
+    public Result<Integer> enable(@Valid @RequestBody EnableUserDTO dto)
+    {
         return userService.enable(dto);
     }
 }

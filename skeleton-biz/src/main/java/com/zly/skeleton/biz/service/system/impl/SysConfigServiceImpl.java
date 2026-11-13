@@ -13,6 +13,8 @@ import com.zly.skeleton.biz.domain.config.vo.ConfigPageItemVO;
 import com.zly.skeleton.biz.mapper.SysConfigMapper;
 import com.zly.skeleton.biz.service.system.SysConfigService;
 import com.zly.skeleton.cache.util.RedisCache;
+import com.zly.skeleton.common.util.constant.RedisPrefixConstant;
+import com.zly.skeleton.common.util.constant.SysConfigKeyConstant;
 import com.zly.skeleton.common.web.entity.Result;
 import com.zly.skeleton.common.web.enums.BizErrorEnum;
 import com.zly.skeleton.common.web.exception.BizException;
@@ -20,7 +22,10 @@ import com.zly.skeleton.mybatisplus.entity.PageResponse;
 import com.zly.skeleton.mybatisplus.entity.SysConfig;
 import com.zly.skeleton.mybatisplus.util.PageUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -32,12 +37,13 @@ import java.util.List;
  * @author ZLY
  * @since 2026/11/2 10:20
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig> implements SysConfigService
+public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig> implements SysConfigService, InitializingBean
 {
     // 配置缓存前缀：sys_config:{configKey}
-    private static final String CACHE_KEY_PREFIX = "sys_config:";
+    private static final String CACHE_KEY_PREFIX = RedisPrefixConstant.CONFIG_KEY_PREFIX;
 
     // 系统内置类型
     private static final Integer CONFIG_TYPE_BUILT_IN = 0;
@@ -86,7 +92,8 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
         {
             updateById(config);
         }
-        redisCache.setCacheObject(CACHE_KEY_PREFIX + configKey, config.getConfigValue());
+        // 缓存与读取保持同一类型：统一存 SysConfigDTO
+        redisCache.setCacheObject(CACHE_KEY_PREFIX + configKey, toDTO(getByConfigKey(configKey)));
     }
 
     @Override
@@ -118,19 +125,39 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
         List<SysConfig> configList = list();
         for (SysConfig config : configList)
         {
-            redisCache.setCacheObject(CACHE_KEY_PREFIX + config.getConfigKey(), config.getConfigValue());
+            redisCache.setCacheObject(CACHE_KEY_PREFIX + config.getConfigKey(), toDTO(config));
         }
     }
 
     @Override
     public SysConfigDTO getConfigByCode(String code)
     {
-        LambdaQueryWrapper<SysConfig> queryWrapper = Wrappers
-                .lambdaQuery(SysConfig.class)
-                .eq(SysConfig::getConfigKey, code);
-        SysConfig sysConfig = getOne(queryWrapper);
+        String redisKey = CACHE_KEY_PREFIX + code;
+        SysConfigDTO cache = redisCache.getCacheObject(redisKey, SysConfigDTO.class);
+        if (cache != null) {
+            return cache;
+        }
+
+        SysConfig sysConfig = getByConfigKey(code);
+        if (sysConfig == null) {
+            return null;
+        }
+        SysConfigDTO dto = toDTO(sysConfig);
+        redisCache.setCacheObject(redisKey, dto);
+        return dto;
+    }
+
+    /**
+     * 实体转缓存 DTO，兼容 null
+     */
+    private SysConfigDTO toDTO(SysConfig config)
+    {
+        if (config == null)
+        {
+            return null;
+        }
         SysConfigDTO dto = new SysConfigDTO();
-        BeanUtils.copyProperties(sysConfig, dto);
+        BeanUtils.copyProperties(config, dto);
         return dto;
     }
 
@@ -154,5 +181,18 @@ public class SysConfigServiceImpl extends ServiceImpl<SysConfigMapper, SysConfig
             return null;
         }
         return configList.getFirst();
+    }
+
+    @Override
+    public void afterPropertiesSet()
+    {
+        try
+        {
+            refreshCache();
+            log.info("Redis预热完成，首次连接初始化已执行");
+        } catch (Exception e)
+        {
+            log.error("Redis预热失败", e);
+        }
     }
 }

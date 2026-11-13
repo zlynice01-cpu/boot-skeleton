@@ -9,6 +9,10 @@ DROP TABLE IF EXISTS sys_dict_data;
 DROP TABLE IF EXISTS sys_dict_type;
 DROP TABLE IF EXISTS sys_user_post;
 DROP TABLE IF EXISTS sys_post;
+DROP TABLE IF EXISTS sys_login_log;
+DROP TABLE IF EXISTS sys_oper_log;
+DROP TABLE IF EXISTS sys_error_log;
+DROP TABLE IF EXISTS sys_data_log;
 
 -- 1. 用户表 sys_user
 CREATE TABLE sys_user (
@@ -214,6 +218,97 @@ CREATE TABLE `sys_user_post` (
                                  KEY `idx_user_id` (`user_id`),
                                  KEY `idx_post_id` (`post_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户岗位关联表';
+
+-- 12. 系统登录日志表 sys_login_log
+CREATE TABLE sys_login_log (
+                               id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+                               username VARCHAR(50) NOT NULL COMMENT '登录账号',
+                               nickname VARCHAR(50) DEFAULT '' COMMENT '用户昵称',
+                               ipaddr VARCHAR(128) DEFAULT '' COMMENT '登录IP',
+                               login_location VARCHAR(255) DEFAULT '' COMMENT '登录地点',
+                               browser VARCHAR(100) DEFAULT '' COMMENT '浏览器',
+                               os VARCHAR(100) DEFAULT '' COMMENT '操作系统',
+                               status TINYINT NOT NULL COMMENT '登录状态 0失败 1成功',
+                               msg VARCHAR(255) DEFAULT '' COMMENT '提示信息（密码错误、账号禁用等）',
+                               create_by bigint DEFAULT NULL COMMENT '创建人ID',
+                               create_time datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                               update_by bigint DEFAULT NULL COMMENT '更新人ID',
+                               update_time datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                               is_deleted char(1) NOT NULL DEFAULT 'N' COMMENT '是否删除 N-未删除 Y-已删除',
+                               INDEX idx_username (username),
+                               INDEX idx_create_time (create_time),
+                               INDEX idx_status (status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统登录日志表';
+
+-- 13. 系统操作日志表 sys_oper_log
+CREATE TABLE sys_oper_log (
+                              id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+                              title VARCHAR(100) NOT NULL COMMENT '模块标题（用户管理、部门管理）',
+                              business_type TINYINT NOT NULL COMMENT '业务类型 0新增 1修改 2删除 3导出 4导入 5授权 6其他',
+                              method VARCHAR(255) NOT NULL COMMENT '请求方法',
+                              request_method VARCHAR(10) NOT NULL COMMENT '请求方式 GET/POST/PUT/DELETE',
+                              oper_name VARCHAR(50) NOT NULL COMMENT '操作人员账号',
+                              oper_nickname VARCHAR(50) DEFAULT '' COMMENT '操作人员昵称',
+                              oper_dept_id BIGINT DEFAULT NULL COMMENT '操作人部门ID',
+                              oper_ip VARCHAR(128) DEFAULT '' COMMENT '操作IP',
+                              oper_location VARCHAR(255) DEFAULT '' COMMENT '操作地点',
+                              oper_url VARCHAR(255) NOT NULL COMMENT '请求地址',
+                              oper_param TEXT COMMENT '请求参数',
+                              json_result TEXT COMMENT '返回结果',
+                              status TINYINT NOT NULL COMMENT '操作状态 0失败 1成功',
+                              error_msg TEXT COMMENT '错误信息',
+                              cost_time BIGINT NOT NULL DEFAULT 0 COMMENT '耗时(ms)',
+                              create_by bigint DEFAULT NULL COMMENT '创建人ID',
+                              create_time datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              update_by bigint DEFAULT NULL COMMENT '更新人ID',
+                              update_time datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                              is_deleted char(1) NOT NULL DEFAULT 'N' COMMENT '是否删除 N-未删除 Y-已删除',
+                              INDEX idx_oper_name (oper_name),
+                              INDEX idx_create_time (create_time),
+                              INDEX idx_business_type (business_type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统操作日志表';
+
+-- 14. 系统异常日志表 sys_error_log
+CREATE TABLE sys_error_log (
+                               id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+                               oper_name VARCHAR(50) DEFAULT '' COMMENT '操作人账号',
+                               oper_ip VARCHAR(128) DEFAULT '' COMMENT 'IP地址',
+                               oper_url VARCHAR(255) DEFAULT '' COMMENT '请求地址',
+                               request_method VARCHAR(10) DEFAULT '' COMMENT '请求方式',
+                               oper_param TEXT COMMENT '请求参数',
+                               exception_name VARCHAR(255) NOT NULL COMMENT '异常类名',
+                               exception_msg TEXT COMMENT '异常信息',
+                               stack_trace LONGTEXT COMMENT '堆栈信息',
+                               create_by bigint DEFAULT NULL COMMENT '创建人ID',
+                               create_time datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                               update_by bigint DEFAULT NULL COMMENT '更新人ID',
+                               update_time datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                               is_deleted char(1) NOT NULL DEFAULT 'N' COMMENT '是否删除 N-未删除 Y-已删除',
+                               INDEX idx_create_time (create_time),
+                               INDEX idx_exception_name (exception_name)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统异常日志表';
+
+-- 15. 数据变更审计日志表 sys_data_log
+CREATE TABLE sys_data_log (
+                              id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
+                              table_name VARCHAR(100) NOT NULL COMMENT '表名',
+                              data_id VARCHAR(64) NOT NULL COMMENT '数据主键ID',
+                              business_type TINYINT NOT NULL COMMENT '0新增 1修改 2删除',
+                              oper_name VARCHAR(50) NOT NULL COMMENT '操作人账号',
+                              before_data LONGTEXT COMMENT '修改前JSON',
+                              after_data LONGTEXT COMMENT '修改后JSON',
+                              diff_data TEXT COMMENT '差异字段JSON',
+                              create_by bigint DEFAULT NULL COMMENT '创建人ID',
+                              create_time datetime DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                              update_by bigint DEFAULT NULL COMMENT '更新人ID',
+                              update_time datetime DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                              is_deleted char(1) NOT NULL DEFAULT 'N' COMMENT '是否删除 N-未删除 Y-已删除',
+                              INDEX idx_table_dataid (table_name, data_id),
+                              INDEX idx_create_time (create_time)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='数据变更审计日志';
+
+
+
 
 -- 插入部门
 INSERT INTO sys_dept (id, parent_id, dept_name, sort, status, create_by, create_time, update_by, update_time, is_deleted) VALUES

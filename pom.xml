@@ -36,7 +36,7 @@
         <mybatis.version>3.5.16</mybatis.version>
         <hutool.version>5.8.32</hutool.version>
         <fastjson.2.version>2.0.53</fastjson.2.version>
-        <!-- 与 Spring Boot 3.3.x 配套的 Spring Session 版本 -->
+        <ip2region.version>2.6.5</ip2region.version>
         <spring-session.version>3.3.1</spring-session.version>
     </properties>
 
@@ -73,6 +73,11 @@
                 <groupId>org.springframework.session</groupId>
                 <artifactId>spring-session-data-redis</artifactId>
                 <version>${spring-session.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.lionsoul</groupId>
+                <artifactId>ip2region</artifactId>
+                <version>${ip2region.version}</version>
             </dependency>
 
             <!-- 内部模块 -->
